@@ -19,7 +19,7 @@ public class GUI_Modules extends javax.swing.JFrame {
      */
     public GUI_Modules() {
         initComponents();
-         setIconImage(new ImageIcon(getClass().getResource("modules.png")).getImage());
+         setIconImage(new ImageIcon(getClass().getResource("assets/images/modules.png")).getImage());
         jList1.setSelectedIndex(0);
         DefaultListModel listModel = new DefaultListModel();
         int length = ModuleManager.getList().length;

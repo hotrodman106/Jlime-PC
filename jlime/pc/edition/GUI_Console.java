@@ -18,7 +18,7 @@ public class GUI_Console extends javax.swing.JFrame {
      */
     public GUI_Console() {
         initComponents();
-        setIconImage(new ImageIcon(getClass().getResource("console.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("assets/images/console.png")).getImage());
     }
 
     /**
