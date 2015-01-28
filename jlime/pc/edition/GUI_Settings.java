@@ -31,7 +31,7 @@ private Color scriptingWindowFontColor = Color.BLACK;
     public GUI_Settings() {
         initComponents();
         
-        setIconImage(new ImageIcon(getClass().getResource("settings.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("assets/images/settings.png")).getImage());
         BufferedReader reader = null;
     try {
         reader = new BufferedReader( new FileReader ("settings.jlimesettings"));
@@ -138,7 +138,7 @@ private Color scriptingWindowFontColor = Color.BLACK;
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/settings.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("assets/images/settings.png"))); // NOI18N
         jLabel1.setText(" Settings Window:");
 
         jCheckBox1.setText("Allow debug commands while scripting");
