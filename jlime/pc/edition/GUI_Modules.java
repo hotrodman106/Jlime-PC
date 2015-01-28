@@ -5,11 +5,8 @@
  */
 package jlime.pc.edition;
 
-import java.io.File;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.ListModel;
-import javax.swing.event.ListDataListener;
 
 /**
  *
