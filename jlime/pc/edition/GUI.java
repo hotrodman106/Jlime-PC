@@ -5,7 +5,6 @@
  */
 package jlime.pc.edition;
 
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -16,12 +15,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Caret;
 
 /**
  *
@@ -45,6 +44,7 @@ public class GUI extends javax.swing.JFrame {
        updateLineCount();
        File modules = new File("Modules");
        ModuleManager.init(modules);
+       ConsoleProxy.init(jTextArea1);
     }
 
     /**
@@ -364,7 +364,7 @@ public class GUI extends javax.swing.JFrame {
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         System.out.println(useDebug);
         String[] lines = jTextArea2.getText().toString().split("\n");
-        CommandParser.inputCommand(lines, jTextArea1, useDebug);
+        CommandParser.inputCommand(lines, useDebug);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
