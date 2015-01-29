@@ -404,7 +404,10 @@ public class CommandParser{
 					    String command = args[1];
 					    while(var1 != 0){
 						    var1--;
-						    doCommand(command, startDepth);
+							int y = doCommand(command, startDepth);
+							if(y != -1){
+								return y;
+							}
 					    }
 				    } catch(Exception p){
 					    consoleOutput.add("OI! There is an error with your loop statement!");
@@ -418,7 +421,10 @@ public class CommandParser{
 					    int var3 = Integer.parseInt(args[2]);
 					    String command = args[3];
 					    for(int var1 = Integer.parseInt(args[0]); var1 < var2; var1 += var3){
-						    doCommand(command, startDepth);
+							int y = doCommand(command, startDepth);
+							if(y != -1){
+								return y;
+							}
 					    }
 				    } catch(Exception p){
 					    consoleOutput.add("OI! There is an error with your for statement!");
