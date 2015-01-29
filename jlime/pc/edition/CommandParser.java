@@ -37,6 +37,10 @@ public class CommandParser{
 			if(x.startsWith("\u0001")){
 				ConsoleProxy.setText("");
 				try{
+					String s = x.substring(1);
+					if(s.equals("")){
+						continue;
+					}
 					ConsoleProxy.append(x.substring(1)+r);
 				} catch(Exception e){
 					//Hi
