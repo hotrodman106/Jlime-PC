@@ -296,7 +296,7 @@ public class GUI extends javax.swing.JFrame {
         jMenu3.add(jMenuItem7);
 
         jMenuItem14.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/help.png"))); // NOI18N
+        jMenuItem14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/help.png"))); // NOI18N
         jMenuItem14.setText("Help Window");
         jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
