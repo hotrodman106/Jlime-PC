@@ -65,6 +65,9 @@ public class CommandParser{
 	public static void inputCommand(String[] input, boolean debug){
 		for(int x = 0; x < input.length; x++){
 			String s = input[x];
+			if(s.startsWith("::")){
+				continue;
+			}
 			multiCommandList.add(new MultiCommand(debug));
 			stringBuilderList.add(new StringBuilder());
 			String[] in = s.replaceFirst(":", "\u0000").split("\u0000");
@@ -131,6 +134,7 @@ public class CommandParser{
 								}
 							} else {
 								inVar = true;
+								stringBuilderList.get(depth.get(level)).append(temp);
 								temp = "";
 							}
 							break;
@@ -566,7 +570,6 @@ public class CommandParser{
 					    consoleOutput.add("OI! There is an error with your if statement!");
 					    return -2;
 					}
-				case ";;":
 				case "\u0002":
 					break;
 				case "/goto":
