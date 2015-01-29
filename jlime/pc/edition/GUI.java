@@ -374,8 +374,13 @@ public class GUI extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         System.out.println(useDebug);
-        String[] lines = jTextArea2.getText().toString().split("\n");
-        CommandParser.inputCommand(lines, useDebug);
+        final String[] lines = jTextArea2.getText().toString().split("\n");
+        (new Thread(){
+        	@Override
+			public void run(){
+				CommandParser.inputCommand(lines, useDebug);
+			}
+		}).start();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed

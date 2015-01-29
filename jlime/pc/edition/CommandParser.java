@@ -617,6 +617,18 @@ public class CommandParser{
 						return -2;
 					}
 					break;
+				case "/sleep":
+					try{
+						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
+						Thread.sleep(Integer.parseInt(args[0]));
+					} catch(InterruptedException e){
+						consoleOutput.add("OI! I just don't know went wrong");
+						return -2;
+					} catch(NumberFormatException e){
+						consoleOutput.add("OI! Not a valid Integer");
+						return -2;
+					}
+					break;
 			    default:
 				    return ModuleManager.run(moduleList, cmd, args, startDepth, consoleOutput);
 
