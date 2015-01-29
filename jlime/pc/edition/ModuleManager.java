@@ -101,7 +101,7 @@ public class ModuleManager{
 		} catch(Exception e){
 			return -2;
 		}
-		consoleOutput.add("OI! Command not valid!\n");
+		//sconsoleOutput.add("OI! Command not valid!\n");
 		return -2;
 	}
 	public static String[] getList(){

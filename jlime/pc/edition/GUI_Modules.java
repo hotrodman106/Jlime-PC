@@ -5,6 +5,7 @@
  */
 package jlime.pc.edition;
 
+import java.awt.event.KeyEvent;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 
@@ -13,7 +14,7 @@ import javax.swing.ImageIcon;
  * @author hotrodman106
  */
 public class GUI_Modules extends javax.swing.JFrame {
-
+private Boolean allowImporting = true;
     /**
      * Creates new form GUI_Modules
      */
@@ -24,11 +25,17 @@ public class GUI_Modules extends javax.swing.JFrame {
         DefaultListModel listModel = new DefaultListModel();
         int length = ModuleManager.getList().length;
         if(length != 0){
+        allowImporting = true;
          for(int x = 0; x != length; x++){
            listModel.addElement(ModuleManager.getList()[x]);
         }
         jList1.setModel(listModel);
-    }
+    }else{
+         allowImporting = false;
+         listModel.addElement("NO INSTALLED MODULES!");
+         jList1.setEnabled(false);
+         jList1.setModel(listModel);
+        }
     }
 
     /**
@@ -57,6 +64,11 @@ public class GUI_Modules extends javax.swing.JFrame {
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jList1MouseClicked(evt);
+            }
+        });
+        jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jList1KeyPressed(evt);
             }
         });
         jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -98,22 +110,35 @@ public class GUI_Modules extends javax.swing.JFrame {
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
-
+if(allowImporting != false){
         if (evt.getClickCount() == 2) {
             int index = jList1.locationToIndex(evt.getPoint());
             System.out.println(index);
             addImport(index);
             dispose();
         }
-        
+}
     }//GEN-LAST:event_jList1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    if(allowImporting != false){
         int s = jList1.getSelectedIndex();
         System.out.println(s);
         addImport(s);
         dispose();
+    }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jList1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList1KeyPressed
+if(allowImporting != false){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            int index = jList1.getSelectedIndex();
+            System.out.println(index);
+            addImport(index);
+            dispose();
+        }
+}
+    }//GEN-LAST:event_jList1KeyPressed
 private void addImport(int index){
  GUI.jTextArea2.append("!import:" + ModuleManager.getList()[index] + "\n");
 }

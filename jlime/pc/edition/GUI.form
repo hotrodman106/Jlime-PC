@@ -7,7 +7,7 @@
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jlime/pc/edition/file.png"/>
+              <Image iconType="3" name="/jlime/pc/edition/assets/images/file.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="File"/>
             <Property name="rolloverEnabled" type="boolean" value="false"/>
@@ -24,7 +24,7 @@
                   <KeyStroke key="Ctrl+N"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/new.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/new.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="New"/>
               </Properties>
@@ -38,7 +38,7 @@
                   <KeyStroke key="Ctrl+R"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/run.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/run.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Run"/>
               </Properties>
@@ -52,7 +52,7 @@
                   <KeyStroke key="Ctrl+S"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/save.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/save.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Save"/>
               </Properties>
@@ -66,7 +66,7 @@
                   <KeyStroke key="Shift+Ctrl+S"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/save.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/save.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Save As"/>
               </Properties>
@@ -80,7 +80,7 @@
                   <KeyStroke key="Ctrl+O"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/load.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/load.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Load"/>
               </Properties>
@@ -94,7 +94,7 @@
                   <KeyStroke key="Shift+Ctrl+C"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/clear.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/clear.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Clear Console"/>
               </Properties>
@@ -107,7 +107,7 @@
         <Menu class="javax.swing.JMenu" name="jMenu2">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jlime/pc/edition/edit.png"/>
+              <Image iconType="3" name="/jlime/pc/edition/assets/images/edit.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
@@ -118,7 +118,7 @@
                   <KeyStroke key="Ctrl+X"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/cut.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/cut.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Cut"/>
               </Properties>
@@ -132,7 +132,7 @@
                   <KeyStroke key="Ctrl+C"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/copy.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/copy.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Copy"/>
               </Properties>
@@ -146,7 +146,7 @@
                   <KeyStroke key="Ctrl+V"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/paste.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/paste.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Paste"/>
               </Properties>
@@ -160,7 +160,7 @@
                   <KeyStroke key="Ctrl+A"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/select.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/select.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Select All"/>
               </Properties>
@@ -173,7 +173,7 @@
         <Menu class="javax.swing.JMenu" name="jMenu3">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jlime/pc/edition/windows.png"/>
+              <Image iconType="3" name="/jlime/pc/edition/assets/images/windows.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Windows"/>
           </Properties>
@@ -184,7 +184,7 @@
                   <KeyStroke key="Ctrl+M"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/console.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/console.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Console Window"/>
               </Properties>
@@ -198,12 +198,26 @@
                   <KeyStroke key="Ctrl+B"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/settings.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/settings.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Settings Window"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem7ActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem14">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+H"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/help.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Help Window"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem14ActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem13">
@@ -212,9 +226,9 @@
                   <KeyStroke key="Shift+Ctrl+M"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jlime/pc/edition/modules.png"/>
+                  <Image iconType="3" name="/jlime/pc/edition/assets/images/modules.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Modules"/>
+                <Property name="text" type="java.lang.String" value="Modules Window"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem13ActionPerformed"/>

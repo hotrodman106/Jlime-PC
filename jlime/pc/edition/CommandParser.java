@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 /**
  * Created by hotrodman106 and Coolway99 on 1/1/2015.
@@ -74,7 +75,9 @@ public class CommandParser{
 			parsed = false;
 			if(y != -1){
 				if(y == -2){
-					consoleOutput.add("Error at line "+(x+1)+r);
+                    JOptionPane.showMessageDialog(GUI.jTextArea2, "OI! that's not right!" + r +
+                    		consoleOutput.remove(consoleOutput.size()-1) + r +
+                    		"There is an error on line " + (x+1) + "!", "ERROR!", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 				x = y-1;
@@ -220,19 +223,6 @@ public class CommandParser{
 	private static int header(String cmd, String[]args){
 		try{
 			switch(cmd){
-				case "!help":
-					consoleOutput.add("Available commands:\n"+
-							"!import:[key1],[key2],[key3]...\n"+
-							"\tImports the module, only useful in lime edit\n" +
-							"!foreground:[int R],[int G],[int B]\n" +
-							"\tChanges the foreground color (not the setting)" +
-							"!background:[int R],[int G],[int B]\n" +
-							"\tChanges the background color (not the setting)\n" +
-							"!resetColors\n" +
-							"\tResets the colors to the user setting\n" +
-							"!help\n" +
-							"\tDisplays this Text\n");
-					break;
 				case "!import":
 					for(String x : args){
 						moduleList.add(x);
@@ -252,7 +242,8 @@ public class CommandParser{
 					ConsoleProxy.resetColors();
 					break;
 				default:
-					consoleOutput.add("OI! invalid ! command!");
+                    JOptionPane.showMessageDialog(GUI.jTextArea2, "OI! that's not right!" + r +"There is an error with a header statement!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+					//consoleOutput.add("OI! invalid ! command!"+r);
 			}
 		} catch(Exception e){
 			consoleOutput.add("ERROR WITH HEADER COMMAND");
@@ -263,6 +254,32 @@ public class CommandParser{
 
 	private static int debug(String cmd, String[] args, int startDepth){
 		switch (cmd){
+                    case "/debug.help":
+                consoleOutput.clear();
+                consoleOutput.add("\u0001COMMAND LIST:" + r
+                        + "/ping     PONG!" + r
+                        + "/pong    PING!" + r
+                        + "/clear     Clears the screen" + r
+                        + "/linebreak     Adds a carriage return" + r
+                        + "/echo:[String]     Writes a string to the console" + r
+                        + "/gettime:[date String]    Outputs the date/time" + r
+                        + "/random:[Integer]     Outputs a random number up to the value specified" + r
+                        + "/loop:[Integer],([Command])     Loops a command a set number of times" + r
+                        + "/if:[Integer][<,>,=,<=,>=][Integer],([True Command]),([False Command])      Checks if a statement is true and, if so, runs a command" + r
+                        + "/for:[Integer],[Integer],[Integer],([Command])    Loops a command for a set number of times in certain increments" + r);
+                break;
+                    case "/debug.headerHelp":
+					consoleOutput.add("Available commands:\n"+
+							"!import:[key1],[key2],[key3]...\n"+
+							"\tImports the module, only useful in lime edit\n" +
+							"!foreground:[int R],[int G],[int B]\n" +
+							"\tChanges the foreground color (not the setting)" +
+							"!background:[int R],[int G],[int B]\n" +
+							"\tChanges the background color (not the setting)\n" +
+							"!resetColors\n" +
+							"\tResets the colors to the user setting\n" +
+                                                        "NOTE: Affects main window!" + r);
+					break;
 			case "/debug.close":
 				System.exit(0);
 				break;
@@ -341,20 +358,6 @@ public class CommandParser{
                 break;
             case "/pong":
                 consoleOutput.add("PING!");
-                break;
-            case "/help":
-                consoleOutput.clear();
-                consoleOutput.add("\u0001COMMAND LIST:" + r
-                        + "/ping     PONG!" + r
-                        + "/pong    PING!" + r
-                        + "/clear     Clears the screen" + r
-                        + "/linebreak     Adds a carriage return" + r
-                        + "/echo:[String]     Writes a string to the console" + r
-                        + "/gettime:[date String]    Outputs the date/time" + r
-                        + "/random:[Integer]     Outputs a random number up to the value specified" + r
-                        + "/loop:[Integer],([Command])     Loops a command a set number of times" + r
-                        + "/if:[Integer][<,>,=,<=,>=][Integer],([True Command]),([False Command])      Checks if a statement is true and, if so, runs a command" + r
-                        + "/for:[Integer],[Integer],[Integer],([Command])    Loops a command for a set number of times in certain increments" + r);
                 break;
             case "/clear":
                 consoleOutput.clear();
