@@ -18,7 +18,7 @@ public class GUI_Console extends javax.swing.JFrame {
      */
     public GUI_Console() {
         initComponents();
-        setIconImage(new ImageIcon(getClass().getResource("console.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("assets/images/console.png")).getImage());
     }
 
     /**
@@ -82,12 +82,12 @@ public class GUI_Console extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-CommandParser.inputCommand(jTextField1.getText().toString(), jTextArea1,true);
+CommandParser.inputCommand(jTextField1.getText().toString(), true);
 jTextField1.setText("");
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
- CommandParser.inputCommand(jTextField1.getText().toString(), jTextArea1,true);
+ CommandParser.inputCommand(jTextField1.getText().toString(), true);
 jTextField1.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
 

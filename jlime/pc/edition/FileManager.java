@@ -33,7 +33,7 @@ public class FileManager {
         stringBuilder.append( line );
         stringBuilder.append( ls );
     }
-
+    reader.close();
     return stringBuilder.toString();
 }
 
@@ -124,7 +124,7 @@ public class FileManager {
        }catch (NullPointerException e){
        GUI.jTextArea2.setForeground(Color.BLACK);
        }
-    
+    reader.close();
 
 }
     

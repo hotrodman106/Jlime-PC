@@ -6,11 +6,8 @@
 package jlime.pc.edition;
 
 import java.awt.event.KeyEvent;
-import java.io.File;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.ListModel;
-import javax.swing.event.ListDataListener;
 
 /**
  *
@@ -23,7 +20,7 @@ private Boolean allowImporting = true;
      */
     public GUI_Modules() {
         initComponents();
-         setIconImage(new ImageIcon(getClass().getResource("modules.png")).getImage());
+         setIconImage(new ImageIcon(getClass().getResource("assets/images/modules.png")).getImage());
         jList1.setSelectedIndex(0);
         DefaultListModel listModel = new DefaultListModel();
         int length = ModuleManager.getList().length;
