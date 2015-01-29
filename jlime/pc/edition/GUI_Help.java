@@ -6,6 +6,7 @@
 package jlime.pc.edition;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -18,6 +19,7 @@ public static final String r = "\n";
      */
     public GUI_Help() {
         initComponents();
+        setIconImage(new ImageIcon(getClass().getResource("assets/images/help.png")).getImage());
         DefaultListModel q = new DefaultListModel();
         String help =   "Standard Commands:" + r
                         + "/ping     PONG!" + r
@@ -57,6 +59,7 @@ public static final String r = "\n";
         jList1 = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("JLime Help Window");
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -81,6 +84,7 @@ public static final String r = "\n";
                 .addGap(3, 3, 3))
         );
 
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jList1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
