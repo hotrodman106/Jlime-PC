@@ -36,12 +36,12 @@ public class CommandParser{
 			if(x.startsWith("\u0001")){
 				ConsoleProxy.setText("");
 				try{
-					ConsoleProxy.append(x.substring(1));
+					ConsoleProxy.append(x.substring(1)+r);
 				} catch(Exception e){
 					//Hi
 				}
 			} else {
-				ConsoleProxy.append(x);
+				ConsoleProxy.append(x+r);
 			}
 		}
 		if(clear){
@@ -123,7 +123,7 @@ public class CommandParser{
 									stringBuilderList.get(depth.get(level)).append(var);
 									temp = "";
 								} else {
-									consoleOutput.add("Oi! That was not a valid variable!" + r + "Name: " + temp + r);
+									consoleOutput.add("Oi! That was not a valid variable!" + r + "Name: " + temp);
 									return -2;
 								}
 							} else {
@@ -163,7 +163,7 @@ public class CommandParser{
 							break;
 						case ':':
 							if(command != null){
-								consoleOutput.add("OI! You have : where you already have declared a command!" + r);
+								consoleOutput.add("OI! You have : where you already have declared a command!");
 								return -2;
 							}
 							multiCommandList.get(depth.get(level)).put(new Command(temp));
@@ -204,6 +204,7 @@ public class CommandParser{
 				CommandParser.doCommand(args[x], startDepth);
 				args[x] = consoleOutput.remove(consoleOutput.size()-1);
 			}
+			args[x] = args[x].trim();
 		}
 		return args;
 	}
@@ -238,20 +239,20 @@ public class CommandParser{
 					}
 					break;
 				case "!foreground":
-					ConsoleProxy.setForeground(new Color(Integer.parseInt(args[0].trim()),
-							Integer.parseInt(args[1].trim()),
-							Integer.parseInt(args[2].trim())));
+					ConsoleProxy.setForeground(new Color(Integer.parseInt(args[0]),
+							Integer.parseInt(args[1]),
+							Integer.parseInt(args[2])));
 					break;
 				case "!background":
-					ConsoleProxy.setBackground(new Color(Integer.parseInt(args[0].trim()),
-							Integer.parseInt(args[1].trim()),
-							Integer.parseInt(args[2].trim())));
+					ConsoleProxy.setBackground(new Color(Integer.parseInt(args[0]),
+							Integer.parseInt(args[1]),
+							Integer.parseInt(args[2])));
 					break;
 				case "!resetColors":
 					ConsoleProxy.resetColors();
 					break;
 				default:
-					consoleOutput.add("OI! invalid ! command!"+r);
+					consoleOutput.add("OI! invalid ! command!");
 			}
 		} catch(Exception e){
 			consoleOutput.add("ERROR WITH HEADER COMMAND");
@@ -271,30 +272,30 @@ public class CommandParser{
 					if(stringList.get(name) == null){
 						if(booleanList.get(name) == null){
 							if(intList.get(name) == null){
-								consoleOutput.add("There is no variable in memory by that name!" + r);
+								consoleOutput.add("There is no variable in memory by that name!");
 							} else {
-								consoleOutput.add(intList.get(name) + r);
+								consoleOutput.add(intList.get(name)+"");
 							}
 						} else {
-							consoleOutput.add(booleanList.get(name) + r);
+							consoleOutput.add(booleanList.get(name)+"");
 						}
 					} else {
-						consoleOutput.add(stringList.get(name) + r);
+						consoleOutput.add(stringList.get(name)+"");
 					}
 				} catch (Exception p){
-					consoleOutput.add("OI! There is an error with your get variable command!" + r);
+					consoleOutput.add("OI! There is an error with your get variable command!");
 				}
 				break;
 			case "/debug.clearVar":
 				try{
 					String name = args[0];
 					if(stringList.remove(name) == null && booleanList.remove(name) == null && intList.remove(name) == null){
-						consoleOutput.add("There is no variable in memory by that name!" + r);
+						consoleOutput.add("There is no variable in memory by that name!");
 					} else{
-						consoleOutput.add("Variable " + name + " removed from memory!" + r);
+						consoleOutput.add("Variable " + name + " removed from memory!");
 					}
 				} catch(Exception p){
-					consoleOutput.add("OI! There is an error with your clear variable command!" + r);
+					consoleOutput.add("OI! There is an error with your clear variable command!");
 				}
 				break;
 			case "/debug.varType":
@@ -303,18 +304,18 @@ public class CommandParser{
 					if(stringList.get(name) == null){
 						if(booleanList.get(name) == null){
 							if(intList.get(name) == null){
-								consoleOutput.add("There is no variable in memory by that name!" + r);
+								consoleOutput.add("There is no variable in memory by that name!");
 							} else {
-								consoleOutput.add("Variable is an Integer" + r);
+								consoleOutput.add("Variable is an Integer");
 							}
 						} else {
-							consoleOutput.add("Variable is a Boolean" + r);
+							consoleOutput.add("Variable is a Boolean");
 						}
 					}else {
-						consoleOutput.add("Variable is a String" + r);
+						consoleOutput.add("Variable is a String");
 					}
 				} catch(Exception e){
-					consoleOutput.add("OI! There is an error with your variable type command!" + r);
+					consoleOutput.add("OI! There is an error with your variable type command!");
 				}
 				break;
 			case "/debug.listModules":
@@ -325,7 +326,7 @@ public class CommandParser{
 						consoleOutput.add(name[x] + ", true name is "+file[x].getName());
 					}
 				} catch(Exception e){
-					consoleOutput.add("OI! I dun broke it!" + r);
+					consoleOutput.add("OI! I dun broke it!");
 				}
 				break;
 			default:
@@ -336,10 +337,10 @@ public class CommandParser{
     private static int parseInput(String cmd, String[] args, int startDepth) {
         switch (cmd) {
             case "/ping":
-                consoleOutput.add("PONG!" + r);
+                consoleOutput.add("PONG!");
                 break;
             case "/pong":
-                consoleOutput.add("PING!" + r);
+                consoleOutput.add("PING!");
                 break;
             case "/help":
                 consoleOutput.clear();
@@ -376,44 +377,44 @@ public class CommandParser{
 				    for(int x = 0; x < args.length; x++){
 					    out += args[x];
 				    }
-				    consoleOutput.add(out + r);
+				    consoleOutput.add(out);
 				    break;
 			    case "/random":
 				    try{
 					    args = parseArgs(args, 0, 1, startDepth, consoleOutput);
-					    int var = Integer.parseInt(args[0].trim());
+					    int var = Integer.parseInt(args[0]);
 					    Random random = new Random();
-					    consoleOutput.add(random.nextInt(var) + r);
+					    consoleOutput.add(random.nextInt(var)+"");
 				    } catch(Exception p){
-					    consoleOutput.add("OI! That's not a integer! Try inputting a integer!" + r);
+					    consoleOutput.add("OI! That's not a integer! Try inputting a integer!");
 					    return -2;
 				    }
 				    break;
 			    case "/loop":
 				    try{
 					    args = parseArgs(args, 0, 1, startDepth, consoleOutput);
-					    int var1 = Integer.parseInt(args[0].trim());
+					    int var1 = Integer.parseInt(args[0]);
 					    String command = args[1];
 					    while(var1 != 0){
 						    var1--;
 						    doCommand(command, startDepth);
 					    }
 				    } catch(Exception p){
-					    consoleOutput.add("OI! There is an error with your loop statement!" + r);
+					    consoleOutput.add("OI! There is an error with your loop statement!");
 					    return -2;
 				    }
 				    break;
 			    case "/for":
 				    try{
 						args = parseArgs(args, 0, 3, startDepth, consoleOutput);
-					    int var2 = Integer.parseInt(args[1].trim());
-					    int var3 = Integer.parseInt(args[2].trim());
+					    int var2 = Integer.parseInt(args[1]);
+					    int var3 = Integer.parseInt(args[2]);
 					    String command = args[3];
-					    for(int var1 = Integer.parseInt(args[0].trim()); var1 < var2; var1 += var3){
+					    for(int var1 = Integer.parseInt(args[0]); var1 < var2; var1 += var3){
 						    doCommand(command, startDepth);
 					    }
 				    } catch(Exception p){
-					    consoleOutput.add("OI! There is an error with your for statement!" + r);
+					    consoleOutput.add("OI! There is an error with your for statement!");
 					    return -2;
 				    }
 				    break;
@@ -424,17 +425,17 @@ public class CommandParser{
 					    String string = args[1];
 						Boolean verbose = false;
 						if(args.length > 2){
-							verbose = Boolean.parseBoolean(args[2].trim());
+							verbose = Boolean.parseBoolean(args[2]);
 						}
 
 					    booleanList.remove(name);
 					    intList.remove(name);
 					    stringList.put(name, string);
 						if(verbose){
-						    consoleOutput.add("String " + name + " set to " + string + r);
+						    consoleOutput.add("String " + name + " set to " + string);
 						}
 				    } catch(Exception p){
-					    consoleOutput.add("OI! There is an error with your String declaration statement!" + r);
+					    consoleOutput.add("OI! There is an error with your String declaration statement!");
 					    return -2;
 				    }
 				    break;
@@ -443,19 +444,19 @@ public class CommandParser{
 						args = parseArgs(args, 0, 2, startDepth, consoleOutput);
 						Boolean verbose = false;
 						if(args.length > 2){
-							verbose = Boolean.parseBoolean(args[2].trim());
+							verbose = Boolean.parseBoolean(args[2]);
 						}
 					    String name = args[0];
-					    int integer = Integer.parseInt(args[1].trim());
+					    int integer = Integer.parseInt(args[1]);
 
 					    booleanList.remove(name);
 					    stringList.remove(name);
 					    intList.put(name, integer);
 					    if(verbose){
-						    consoleOutput.add("Integer " + name + " set to " + integer + r);
+						    consoleOutput.add("Integer " + name + " set to " + integer);
 					    }
 				    } catch(Exception p){
-					    consoleOutput.add("OI! There is an error with your Integer declaration statement!" + r);
+					    consoleOutput.add("OI! There is an error with your Integer declaration statement!");
 					    return -2;
 				    }
 				    break;
@@ -464,19 +465,19 @@ public class CommandParser{
 						args = parseArgs(args, 0, 2, startDepth, consoleOutput);
 						Boolean verbose = false;
 						if(args.length > 2){
-							verbose = Boolean.parseBoolean(args[2].trim());
+							verbose = Boolean.parseBoolean(args[2]);
 						}
 					    String name = args[0];
-					    boolean b = Boolean.parseBoolean(args[1].trim());
+					    boolean b = Boolean.parseBoolean(args[1]);
 
 					    stringList.remove(name);
 					    intList.remove(name);
 					    booleanList.put(name, b);
 						if(verbose){
-							consoleOutput.add("Boolean " + name + " set to " + b + r);
+							consoleOutput.add("Boolean " + name + " set to " + b);
 						}
 				    } catch(Exception p){
-					    consoleOutput.add("OI! There is an error with your Boolean declaration statement!" + r);
+					    consoleOutput.add("OI! There is an error with your Boolean declaration statement!");
 					    return -2;
 				    }
 				    break;
@@ -485,15 +486,28 @@ public class CommandParser{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
 					    DateFormat df = new SimpleDateFormat(args[0]);
 					    Date dateObj = new Date();
-					    consoleOutput.add(df.format(dateObj) + r);
+					    consoleOutput.add(df.format(dateObj));
 				    } catch(Exception p){
-					    consoleOutput.add("OI! That's not a proper date String! Try inputting a date String!" + r);
+					    consoleOutput.add("OI! That's not a proper date String! Try inputting a date String!");
 					    return -2;
 				    }
 				    break;
 			    case "/if":
 				    try{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
+						try{
+							if(Boolean.parseBoolean(args[0])){
+								return doCommand(args[1], startDepth);
+							} else {
+								if(!args[0].toUpperCase().equals("FALSE")){
+									throw new Exception();
+								}
+								if(args.length > 2){
+									return doCommand(args[2], startDepth);
+								}
+								return doCommand("\u0002", startDepth);
+							}
+						} catch(Exception e){}
 						String[] num = args[0].split("[<=>]+");
 						String operator = args[0].split("\\d+")[1];
 						int var1 = Integer.parseInt(num[0]);
@@ -542,11 +556,11 @@ public class CommandParser{
 								    return doCommand(falseCommand, startDepth);
 							    }
 						    default:
-							    consoleOutput.add("OI! Invalid Operator for your if statement!" + r);
+							    consoleOutput.add("OI! Invalid Operator for your if statement!");
 							    return -2;
 					    }
 				    } catch(Exception p){
-					    consoleOutput.add("OI! There is an error with your if statement!" + r);
+					    consoleOutput.add("OI! There is an error with your if statement!");
 					    return -2;
 					}
 				case ";;":
@@ -555,9 +569,9 @@ public class CommandParser{
 				case "/goto":
 					try{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
-						int x = Integer.parseInt(args[0].trim());
+						int x = Integer.parseInt(args[0]);
 						if(x < 0){
-							consoleOutput.add("OI! There is no such thing as a negative line!" + r);
+							consoleOutput.add("OI! There is no such thing as a negative line!");
 							return -2;
 						}
 						return x - 1;
@@ -571,7 +585,7 @@ public class CommandParser{
 							doCommand(args[0], startDepth);
 							args[0] = consoleOutput.remove(consoleOutput.size()-1);
 						}
-						int x = Integer.parseInt(args[0].trim()) - 1;
+						int x = Integer.parseInt(args[0]) - 1;
 						while(x > 0){
 							consoleOutput.remove(consoleOutput.size()-1);
 							x--;
@@ -584,7 +598,7 @@ public class CommandParser{
 				case "/flush":
 					try{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
-						boolean b = Boolean.parseBoolean(args[0].trim());
+						boolean b = Boolean.parseBoolean(args[0]);
 						flush(b);
 					} catch(Exception e){
 						consoleOutput.add("OI! Not a valid boolean");
@@ -596,7 +610,7 @@ public class CommandParser{
 
 		    }
 	    } catch(ArrayIndexOutOfBoundsException e){
-		    consoleOutput.add("OI! A command didn't have the right number of arguments!" + r);
+		    consoleOutput.add("OI! A command didn't have the right number of arguments!");
 	    return -2;
     }
 	    return -1;
