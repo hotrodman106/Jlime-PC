@@ -1,5 +1,6 @@
 package jlime.pc.edition;
 
+import java.awt.Component;
 import java.io.File;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,7 +26,11 @@ public class ModuleManager{
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
-	public static @interface Module{}
+	public static @interface Module{
+		boolean help = false;
+		double version = 1.0;
+		double minVersion = GUI.version;
+	}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
@@ -34,13 +39,17 @@ public class ModuleManager{
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
 	public static @interface Parser{}
-
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.METHOD)
+	public static @interface Help{}
 
 	public static void init(File directory){
 		for(File file : directory.listFiles()){
 			add(file);
 		}
 	}
+	@SuppressWarnings("static-access")
 	public static void add(File file){
 		try{
 			fileList.put(file, new ArrayList<String>());
@@ -51,18 +60,20 @@ public class ModuleManager{
 			Enumeration<JarEntry> entries = jarFile.entries();
 			while (entries.hasMoreElements()) {
 				JarEntry entry = entries.nextElement();
-				if (entry.getName().endsWith(".class")) {
+				if(entry.getName().endsWith(".class")){
 					String name = entry.getName();
 					name = name.substring(0, name.lastIndexOf(".class"))
 							.replaceAll("/", ".");
-					if (loader == null) {
+					if(loader == null){
 						clazz = Class.forName(name);
 					} else {
 						clazz = Class.forName(name, true, loader);
 					}
-					if(clazz.getAnnotation(ModuleManager.Module.class) != null){
+					if(clazz.getAnnotation(Module.class) != null){
+						boolean hasHelp = clazz.getAnnotation(Module.class).help;
 						String modName = null;
 						Method modMethod = null;
+						Component modHelp = null;
 						for(Method method : clazz.getMethods()){
 							if(method.getAnnotation(ModInit.class) != null){
 								modName = (String) method.invoke(null);
@@ -70,7 +81,10 @@ public class ModuleManager{
 							if(method.getAnnotation(Parser.class) != null){
 								modMethod = method;
 							}
-							if(modName != null && modMethod != null){
+							if(method.getAnnotation(Help.class) != null){
+								modHelp = (Component) method.invoke(null);
+							}
+							if(modName != null && modMethod != null && modHelp != null){
 								methodList.put(modName, modMethod);
 								fileList.get(file).add(modName);
 								break;
@@ -96,12 +110,11 @@ public class ModuleManager{
 				if(y != -3){
 					return y;
 				}
-                                System.out.println("Couldn't find anything for: " + cmd + " " + key);
 			}
 		} catch(Exception e){
 			return -2;
 		}
-		//sconsoleOutput.add("OI! Command not valid!\n");
+		consoleOutput.add("OI! Command not valid!\n");
 		return -2;
 	}
 	public static String[] getList(){

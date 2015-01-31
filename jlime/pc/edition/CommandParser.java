@@ -155,13 +155,30 @@ public class CommandParser{
 							command = null;
 							break;
 						case ')':
-							multiCommandList.get(depth.get(level)).get(commandDepth.remove(level)).addArg(stringBuilderList.get(depth.get(level)).append(temp).toString());
+							/*if(command != null){
+								String s = stringBuilderList.get(depth.get(level)).append(temp).toString();
+								multiCommandList.get(depth.get(level)).get(commandDepth.get(level)).addArg(s);
+							} else {
+								multiCommandList.get(depth.get(level)).put(new Command(temp));
+							}
 							stringBuilderList.get(depth.get(level-1)).append("\u0005" + depth.remove(level--) + "\u0006");
 							command = null;
+							temp = "";*/
+							if(command != null){
+								multiCommandList.get(depth.get(level)).get(commandDepth.get(level)).addArg(stringBuilderList.get(depth.get(level)).append(temp).toString());
+							} else {
+								multiCommandList.get(depth.get(level)).put(new Command(temp));
+							}
+							stringBuilderList.get(depth.get(level-1)).append("\u0005" + depth.remove(level--) + "\u0006");
 							temp = "";
+							command = null;
 							break;
 						case '&':
-							multiCommandList.get(depth.get(level)).get(commandDepth.get(level)).addArg(stringBuilderList.get(depth.get(level)).append(temp).toString());
+							if(command != null){
+								multiCommandList.get(depth.get(level)).get(commandDepth.get(level)).addArg(stringBuilderList.get(depth.get(level)).append(temp).toString());
+							} else {
+								multiCommandList.get(depth.get(level)).put(new Command(temp));
+							}
 							stringBuilderList.set(depth.get(level), new StringBuilder());
 							commandDepth.set(level, commandDepth.get(level)+1);
 							command = null;
@@ -210,12 +227,15 @@ public class CommandParser{
 
 	public static String[] parseArgs(String[] args, int offset, int length, int startDepth,
 			ArrayList<String> consoleOutput){
-		for(int x = offset; x < length; x++){
+		System.out.println(offset);
+		System.out.println(length);
+		for(int x = offset; x < length;x++){
 			if(args[x].contains("\u0005")){
 				CommandParser.doCommand(args[x], startDepth);
 				args[x] = consoleOutput.remove(consoleOutput.size()-1);
 			}
 			args[x] = args[x].trim();
+			System.out.println(x);
 		}
 		return args;
 	}
@@ -380,16 +400,16 @@ public class CommandParser{
 	    return -1;
     }
     private static int parseAdvanceCommand(String cmd, String[] args, int startDepth) {
-	    try{
-		    switch(cmd){
-			    case "/echo":
-				    String out = "";
-				    args = parseArgs(args, 0, args.length, startDepth, consoleOutput);
-				    for(int x = 0; x < args.length; x++){
-					    out += args[x];
-				    }
-				    consoleOutput.add(out);
-				    break;
+		try{
+			switch(cmd){
+    			case "/echo":
+    				args = parseArgs(args, 0, args.length, startDepth, consoleOutput);
+    				String out = args[0];
+    				for(int x = 0; x < args.length; x++){
+    					out += ", "+args[x];
+    				}
+    				consoleOutput.add(out);
+    				break;
 			    case "/random":
 				    try{
 					    args = parseArgs(args, 0, 1, startDepth, consoleOutput);
@@ -639,6 +659,7 @@ public class CommandParser{
 		    }
 	    } catch(ArrayIndexOutOfBoundsException e){
 		    consoleOutput.add("OI! A command didn't have the right number of arguments!");
+		    e.printStackTrace();
 	    return -2;
     }
 	    return -1;

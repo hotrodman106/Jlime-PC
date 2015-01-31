@@ -29,6 +29,8 @@ import javax.swing.text.BadLocationException;
 public class GUI extends javax.swing.JFrame {
            private String lastFile = "";
            public static boolean useDebug;
+	public static final double version = 5.0;
+	public static final String versionName = "Limeade";
 
     /**
      * Creates new form NewJFrame
