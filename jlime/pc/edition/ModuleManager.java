@@ -71,7 +71,12 @@ public class ModuleManager{
 			while (entries.hasMoreElements()) {
 				JarEntry entry = entries.nextElement();
 				String name = entry.getName();
-				String filetype = name.substring(name.lastIndexOf('.'));
+                                String filetype = null;
+                                try{
+				filetype = name.substring(name.lastIndexOf('.'));
+                                } catch(IndexOutOfBoundsException e){
+                                    continue;
+                                }
 				name = name.substring(0, name.lastIndexOf('.'));
 				switch(filetype){
 					case ".class":

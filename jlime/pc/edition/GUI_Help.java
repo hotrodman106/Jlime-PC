@@ -8,12 +8,14 @@ package jlime.pc.edition;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.io.IOException;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -69,7 +71,7 @@ public class GUI_Help extends JFrame {
 	}
 	
 	public void addDefaultTab(String modName, String title, String[] text){
-		DefaultListModel<String> listModel = new DefaultListModel<>();
+		/*DefaultListModel<String> listModel = new DefaultListModel<>();
 		JList<String> list = new JList<>();
 		JLabel label = new JLabel();
 		JPanel panel = new JPanel();
@@ -97,9 +99,13 @@ public class GUI_Help extends JFrame {
 				.addComponent(label)
 				.addGap(3, 3, 3)
 				.addComponent(list)
-				);
-		
-		this.addModTab(panel, modName);
+				);*/
+		JEditorPane main = new JEditorPane();
+                try {
+        //Sets help menu to help.html :)
+        main.setPage(GUI_Help.class.getResource("help.html"));
+         } catch (IOException ex) {}
+		this.addModTab(main, modName);
 	}
 	
 	public void removeModules(String modName){
