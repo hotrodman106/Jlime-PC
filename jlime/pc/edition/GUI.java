@@ -39,6 +39,7 @@ public class GUI extends javax.swing.JFrame {
      */
     public GUI() {
         initComponents();
+        jLabel2.setText("Version " + version + " " + versionName);
                try {
                    FileManager.readsettingsFile("settings.jlimesettings");
                } catch (IOException ex) {
