@@ -29,6 +29,8 @@ import javax.swing.text.BadLocationException;
 public class GUI extends javax.swing.JFrame {
            private String lastFile = "";
            public static boolean useDebug;
+	public final GUI_Help help = new GUI_Help();;
+	public static final GUI gui = new GUI();
 	public static final double version = 5.0;
 	public static final String versionName = "Limeade";
 
@@ -44,8 +46,6 @@ public class GUI extends javax.swing.JFrame {
                }
        setIconImage(new ImageIcon(getClass().getResource("assets/images/javalime.png")).getImage());
        updateLineCount();
-       File modules = new File("Modules");
-       ModuleManager.init(modules);
        ConsoleProxy.init(jTextArea1);
     }
 
@@ -478,8 +478,7 @@ clpbrd.setContents (stringSelection, null);
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
     private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
-     GUI_Help t = new GUI_Help();
-     t.setVisible(true);
+     help.setVisible(true);
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
 private void showSaveAs(){
@@ -524,6 +523,8 @@ private void updateLineCount(){
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+    	File modules = new File("Modules");
+        ModuleManager.init(modules);
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -548,12 +549,7 @@ private void updateLineCount(){
         //</editor-fold>
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GUI().setVisible(true);
-            }
-        });
+        gui.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
