@@ -1,11 +1,7 @@
 package jlime.pc.edition;
 
 import java.awt.Component;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,11 +29,11 @@ public class ModuleManager{
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	public static @interface Module{
-		HelpLocation help() default HelpLocation.none;
+		HelpLocation help();
 		double version() default 1.0;
 		double minProgVersion() default GUI.version;
 		enum HelpLocation{
-			internal, external, none
+			component, html, txt
 		}
 	}
 	
@@ -66,90 +62,68 @@ public class ModuleManager{
 			Class<?> clazz = null;
 			JarFile jarFile = new JarFile(file);
 			Enumeration<JarEntry> entries = jarFile.entries();
-			WatchList helpList = new WatchList();
 			
 			while (entries.hasMoreElements()) {
 				JarEntry entry = entries.nextElement();
 				String name = entry.getName();
-                                String filetype = null;
-                                try{
-				filetype = name.substring(name.lastIndexOf('.'));
-                                } catch(IndexOutOfBoundsException e){
-                                    continue;
-                                }
-				name = name.substring(0, name.lastIndexOf('.'));
-				switch(filetype){
-					case ".class":
-						name = name.replaceAll("/", ".");
-						if(loader == null){
-							clazz = Class.forName(name);
-						} else {
-							clazz = Class.forName(name, true, loader);
-						}
-						if(clazz.getAnnotation(Module.class) != null){
-							Module annotation =  clazz.getAnnotation(Module.class);
-							Module.HelpLocation help = annotation.help();
-							if(annotation.minProgVersion() > GUI.version){
-								JOptionPane.showMessageDialog(null, "Warning, module file "+file.getName()+" is for a newer version of JLime"
-										+ "\nPlease update JLime or tell the Mod Author about this problem"
-										+ "\n Current Version:"+GUI.version+", Required version:"+annotation.minProgVersion(), "Module Error",
-										JOptionPane.ERROR_MESSAGE);
-									return;
-							}
-							String modName = null;
-							Method modMethod = null;
-							Component modHelp = null;
-							for(Method method : clazz.getMethods()){
-								if(method.getAnnotation(ModInit.class) != null){
-									modName = (String) method.invoke(null);
-								}
-								if(method.getAnnotation(Parser.class) != null){
-									modMethod = method;
-								}
-								switch(help){
-									case internal:
-										if(method.getAnnotation(Help.class) != null){
-											modHelp = (Component) method.invoke(null);
-										}
-										break;
-									default:
-										break;
-								}
-								if(modName != null && modMethod != null){
-									switch(help){
-										case internal:
-											if(modHelp == null){
-												continue;
-											}
-											GUI.gui.help.addModTab(modHelp, modName);
-											break;
-										case external:
-											helpList.load(modName);
-											break;
-										case none:
-											break;
-									}
-									methodList.put(modName, modMethod);
-									fileList.get(file).add(modName);
-									break;
-								}
-							}
-						}
-						break;
-					case ".txt":
-						helpList.put(file);
-						break;
-					default:
-						break;
+				if(!name.endsWith(".class")){
+					continue;
 				}
+				name = name.substring(0, name.lastIndexOf('.'));
+				name = name.replaceAll("/", ".");
+				if(loader == null){
+					clazz = Class.forName(name);
+				} else {
+					clazz = Class.forName(name, true, loader);
+				}
+				if(clazz.getAnnotation(Module.class) != null){
+					Module annotation =  clazz.getAnnotation(Module.class);
+					Module.HelpLocation help = annotation.help();
+					if(annotation.minProgVersion() > GUI.version){
+						JOptionPane.showMessageDialog(null, "Warning, module file "+file.getName()+" is for a newer version of JLime"
+								+ "\nPlease update JLime or tell the Mod Author about this problem"
+								+ "\n Current Version:"+GUI.version+", Required version:"+annotation.minProgVersion(), "Module Error",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					String modName = null;
+					Method modMethod = null;
+					Method modHelp = null;
+					for(Method method : clazz.getMethods()){
+						if(method.getAnnotation(ModInit.class) != null){
+							modName = (String) method.invoke(null);
+						}
+						if(method.getAnnotation(Parser.class) != null){
+							modMethod = method;
+						}
+						if(method.getAnnotation(Help.class) != null){
+							modHelp = method;
+						}
+						if(modName != null && modMethod != null && modHelp != null){
+							switch(help){
+								case component:
+									GUI.gui.help.addModTab((Component) modHelp.invoke(null),
+											modName);
+									break;
+								case txt:
+									GUI.gui.help.addDefaultTab(modName,
+											(String) modHelp.invoke(null), "txt");
+									break;
+								case html:
+									GUI.gui.help.addDefaultTab(modName,
+											(String) modHelp.invoke(null), "html");
+									break;
+							}
+							methodList.put(modName, modMethod);
+							fileList.get(file).add(modName);
+							break;
+						}
+					}
+				}
+				break;
 			}
 			if(fileList.get(file).isEmpty()){
 				fileList.remove(file);
-			}
-			if(!helpList.clean()){
-				JOptionPane.showMessageDialog(null, "Warning, module file "+file.getName()+" had issues loading help files!"
-						+ "\nPlease tell the module author about this problem", "Module Error",
-						JOptionPane.ERROR_MESSAGE);
 			}
 			jarFile.close();
 			loader.close();
@@ -187,62 +161,5 @@ public class ModuleManager{
 			GUI.gui.help.removeModules(name);
 		}
 		fileList.remove(file);
-	}
-}
-class WatchList{
-	private final ArrayList<String> watching = new ArrayList<>();
-	private final HashMap<String, File> potentialHelpList = new HashMap<>();
-	
-	public void put(File file) throws IOException{
-		String name = file.getName().substring(0, file.getName().lastIndexOf('.'));
-		if(watching.contains(name)){
-			loadHelp(name, file);
-			watching.remove(name);
-		} else {
-			potentialHelpList.put(name, file);
-		}
-	}
-	
-	public void load(String name) throws IOException{
-		Boolean b = this.loadHelp(name);
-		if(!b){
-			watching.add(name);
-		}
-	}
-	
-	private boolean loadHelp(String s) throws IOException{
-		File file = potentialHelpList.remove(s);
-		if(file == null){
-			return false;
-		}
-		return this.loadHelp(s, file);
-	}
-	
-	private boolean loadHelp(String s, File file) throws IOException{
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String title = reader.readLine();
-		ArrayList<String> in = new ArrayList<>();
-		String temp = reader.readLine();
-		while(temp != null){
-			in.add(temp);
-			temp = reader.readLine();
-		}
-		GUI.gui.help.addDefaultTab(s, title, in.toArray(new String[0]));
-		reader.close();
-		return true;
-	}
-	
-	public boolean clean() throws IOException{
-		Boolean b = watching.isEmpty();
-		if(b){
-			return true;
-		}
-		for(String s : watching){
-			Boolean b2 = loadHelp(s);
-			if(b2 == false){
-				return false;
-			}
-		}
-		return true;
 	}
 }

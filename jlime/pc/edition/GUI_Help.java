@@ -8,7 +8,9 @@ package jlime.pc.edition;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -22,6 +24,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.BevelBorder;
 
 /**
@@ -38,28 +42,38 @@ public class GUI_Help extends JFrame {
 	public GUI_Help() {
 		setIconImage(new ImageIcon(getClass().getResource("assets/images/help.png")).getImage());
 		
-		String[] helpLines = {"Standard Commands:",
-				"/ping PONG!",
-				"/pong PING!",
-				"/clear Clears the screen",
-				"/linebreak Adds a carriage return",
-				"/echo:[String] Writes a string to the console",
-				"/gettime:[date String] Outputs the date/time",
-				"/random:[Integer] Outputs a random number up to the value specified",
-				"/loop:[Integer],([Command]) Loops a command a set number of times",
-				"/if:[Integer][<,>,=,<=,>=][Integer],([True Command]),([False Command]) Checks if a statement is true and, if so, runs a command",
-				"/for:[Integer],[Integer],[Integer],([Command]) Loops a command for a set number of times in certain increments",
-				"Header Commands:",
-				"!import:[key1],[key2],[key3]... Imports a module",
-				"!foreground:[int,],[int G],[int B] Changes the console's foreground color temporarily",
-				"!background:[int,],[int G],[int B] Changes the background color temporarily",
-		"!resetColors resets the colors to the user setting"};
-		
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(GUI_Help.class.getResource("help.html").openStream()));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		StringBuilder help = new StringBuilder();
+		String temp = null;
+		try {
+			temp = reader.readLine();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		while(temp != null){
+			help.append(temp + r);
+			try {
+				temp = reader.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		this.setTitle("JLime Help Window");
 		this.setSize(560, 440);
 		this.add(tabbedPane);
-		this.addDefaultTab("JLime", "JLime Command List", helpLines);
+		this.addDefaultTab("JLime", help.toString(), "html");
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void addModTab(Component component, String modName){
@@ -70,42 +84,51 @@ public class GUI_Help extends JFrame {
 		componentList.put(modName, tabbedPane.indexOfComponent(scrollPane));
 	}
 	
-	public void addDefaultTab(String modName, String title, String[] text){
-		/*DefaultListModel<String> listModel = new DefaultListModel<>();
-		JList<String> list = new JList<>();
-		JLabel label = new JLabel();
-		JPanel panel = new JPanel();
-		label.setFont(new Font("Tahoma", Font.PLAIN , 18));
-		label.setText(title);
-		panel.setBackground(new Color(255, 255, 255));
-		panel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		
-		for(int x = 0; x != text.length; x++){
-			listModel.addElement(text[x]+r);
-		}
-		list.setModel(listModel);
-		
-		GroupLayout layout = new GroupLayout(panel);
-		panel.setLayout(layout);
-		
-		layout.setHorizontalGroup(layout.createParallelGroup()
-				.addGroup(layout.createSequentialGroup()
-						.addGap(195)
+	public void addDefaultTab(String modName, String text, String fileType){
+		switch(fileType){
+			case "txt":
+				String[] in = text.split("\n");
+				String title = in[0];
+				DefaultListModel<String> listModel = new DefaultListModel<>();
+				JList<String> list = new JList<>();
+				JLabel label = new JLabel();
+				JPanel panel = new JPanel();
+				label.setFont(new Font("Tahoma", Font.PLAIN , 18));
+				label.setText(title);
+				panel.setBackground(new Color(255, 255, 255));
+				panel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+				
+				for(int x = 1; x < in.length; x++){
+					listModel.addElement(in[x]+r);
+				}
+				list.setModel(listModel);
+				
+				GroupLayout layout = new GroupLayout(panel);
+				panel.setLayout(layout);
+				
+				layout.setHorizontalGroup(layout.createParallelGroup()
+						.addGroup(layout.createSequentialGroup()
+								.addGap(195)
+								.addComponent(label)
+								.addGap(195))
+						.addComponent(list));
+				layout.setVerticalGroup(
+						layout.createSequentialGroup()
 						.addComponent(label)
-						.addGap(195))
-				.addComponent(list));
-		layout.setVerticalGroup(
-				layout.createSequentialGroup()
-				.addComponent(label)
-				.addGap(3, 3, 3)
-				.addComponent(list)
-				);*/
-		JEditorPane main = new JEditorPane();
-                try {
-        //Sets help menu to help.html :)
-        main.setPage(GUI_Help.class.getResource("help.html"));
-         } catch (IOException ex) {}
-		this.addModTab(main, modName);
+						.addGap(3, 3, 3)
+						.addComponent(list)
+						);
+				this.addModTab(panel, modName);
+				break;
+			case "html":
+				JEditorPane main = new JEditorPane();
+				main.setContentType("text/html");
+				main.setText(text);
+				this.addModTab(main, modName);
+				break;
+			default:
+				break;
+		}
 	}
 	
 	public void removeModules(String modName){
