@@ -21,7 +21,7 @@ private Boolean allowImporting = true;
     public GUI_Modules() {
         initComponents();
          setIconImage(new ImageIcon(getClass().getResource("assets/images/modules.png")).getImage());
-        jList1.setSelectedIndex(0);
+        jList1.setSelectedIndex(1);
         DefaultListModel listModel = new DefaultListModel();
         int length = ModuleManager.getList().length;
         if(length != 0){
@@ -153,7 +153,7 @@ private void addImport(int index){
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

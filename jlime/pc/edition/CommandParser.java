@@ -405,7 +405,7 @@ public class CommandParser{
     			case "/echo":
     				args = parseArgs(args, 0, args.length, startDepth, consoleOutput);
     				String out = args[0];
-    				for(int x = 0; x < args.length; x++){
+    				for(int x = 1; x < args.length; x++){
     					out += ", "+args[x];
     				}
     				consoleOutput.add(out);

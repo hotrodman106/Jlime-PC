@@ -1,4 +1,38 @@
 <html>
-<center><h1>IT WORKED! HOLY CRAP!</h1></center>
-<h2>Well time to go code and stuff... have fun</h2>
+<head></head>
+<body style="background-color: black; color: #16E616">
+<center><h1>JLime Help Menu</h1></center>
+<center><h3>(For version 5 Limeade)</h3></center>
+<h2>Basic Commands:</h2>
+<ul>
+    <li>/ping   PONG!</li>
+    <li>/pong   PING!</li>
+    <li>/clear   Clears the screen</li>
+    <li>/linebreak   Adds a carriage return to the console</li>
+    <li>/echo:[String]   Writes a string to the console</li>
+    <li>/getTime:[date String]  Gets the time or date based off a format</li>
+    <li>/random:[Int]   Generates a random number between 0 and the value specified</li>
+    <li>/loop:[Int],([Command])   Loops a command a set number of times</li>
+    <li>/if:[Integer][<,>,=,<=,>=][Integer],([True Command]),([False Command])  Checks if a statement is true and, if so, runs a command</li>
+    <li>/for:[Integer],[Integer],[Integer],([Command])  Loops a command for a set number of times in certain increments</li>
+</ul>
+<h2>Header Commands:</h2>
+<ul>
+    <li>!import:[key1],[key2],[key3]... Imports a module"</li>
+    <li>!foreground:[Int,],[Int G],[Int B]  Changes the console's foreground color temporarily</li>
+    <li>!background:[Int,],[Int G],[Int B]  Changes the background color temporarily</li>
+    <li>!resetColors    Resets the colors to the user setting</li>
+</ul>
+<h2>Debug Commands (Only for use in debug mode):</h2>
+<ul>
+    <li>/debug.close    Closes program</li>
+    <li>!help
+    <li>/debug.getVar:[String]  Gets a variable by name in memory</li>
+    <li>/debug.help     Help menu for standard commands</li>
+    <li>/debug.headerHelp   Help menu for header commands</li>
+    <li>/debug.clearVar:[String]    Clears variable by name</li>
+    <li>/debug.varType:[String]     Gets variable type by name</li>
+    <li>/debug.listModules     Gets all installed modules</li>
+</ul>
+</body>
 </html>
