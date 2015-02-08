@@ -5,14 +5,17 @@
  */
 package jlime.pc.edition;
 
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +51,7 @@ public class GUI extends javax.swing.JFrame {
        setIconImage(new ImageIcon(getClass().getResource("assets/images/javalime.png")).getImage());
        updateLineCount();
        ConsoleProxy.init(jTextArea1);
+       setExtendedState(MAXIMIZED_BOTH);
     }
 
     /**
