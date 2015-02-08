@@ -124,6 +124,8 @@ public class GUI_Help extends JFrame {
 				JEditorPane main = new JEditorPane();
 				main.setContentType("text/html");
 				main.setText(text);
+				main.setEditable(false);
+				main.setHighlighter(null);
 				this.addModTab(main, modName);
 				break;
 			default:

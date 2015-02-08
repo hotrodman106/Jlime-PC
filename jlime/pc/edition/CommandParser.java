@@ -53,7 +53,11 @@ public class CommandParser{
 			consoleOutput.clear();
 		}
 	}
-	
+/**
+ * Replaces a variable in the users script with its value.
+ * @param key Name of variable ( EX: the x in %x% ).
+ * @return Returns the value of the variable.
+ */
 	private static String getVar(String key){
 		if(stringList.get(key) != null){
 			return stringList.get(key);
@@ -66,6 +70,11 @@ public class CommandParser{
 		}
 		return null;
 	}
+	/**
+	 * The root of the command parser. Decides where to send the command based of its contents.
+	 * @param input String to be parsed.
+	 * @param debug Whether the command parser uses the debug parser or not.
+	 */
 	public static void inputCommand(String[] input, boolean debug){
 		for(int x = 0; x < input.length; x++){
 			String s = input[x];
@@ -224,7 +233,15 @@ public class CommandParser{
 		}
 		return parseInput(cmd, null, startDepth);
 	}
-
+/**
+ * Handles command's arguments
+ * @param args All arguments given to a command. ( EX: true,false,0 )
+ * @param offset Offset of array.
+ * @param length Amount of arguments to parse.
+ * @param startDepth Offset for 'commands' array.
+ * @param consoleOutput The array that stores all output to be printed to console.
+ * @return Returns a list of arguments
+ */
 	public static String[] parseArgs(String[] args, int offset, int length, int startDepth,
 			ArrayList<String> consoleOutput){
 		System.out.println(offset);
@@ -247,7 +264,12 @@ public class CommandParser{
 	private static int getOut(int code, int startDepth){
 		return multiCommandList.get(code).run(startDepth);
 	}
-
+	/**
+	 * Parses all header commands.
+	 * @param cmd Main part of command ( EX: !import: )
+     * @param args All arguments following command ( EX: true )
+	 * @return Returns '-1' if the command is consumed, '-2' if there is an error, '-3' if there is no command by name, and a value 0 or greater if it is goto. 
+	 */
 	private static int header(String cmd, String[]args){
 		try{
 			switch(cmd){
@@ -279,6 +301,13 @@ public class CommandParser{
 		}
 		return -1;
 	}
+/**
+ * Parses commands with the 'debug.' prefix
+ * @param cmd Main part of command ( EX: /debug.help: )
+ * @param args All arguments following command ( EX: true )
+ * @param startDepth Offset for Multicommand's 'commands' array.
+ * @return Returns '-1' if the command is consumed, '-2' if there is an error, '-3' if there is no command by name, and a value 0 or greater if it is goto. 
+ */
 
 	private static int debug(String cmd, String[] args, int startDepth){
 		switch (cmd){
@@ -309,7 +338,12 @@ public class CommandParser{
                                                         "NOTE: Affects main window!" + r);
 					break;
 			case "/debug.close":
-				System.exit(0);
+				try{
+				args = parseArgs(args, 0, args.length, startDepth, consoleOutput);
+				System.exit(Integer.parseInt(args[0]));
+				}catch(Exception q){
+					consoleOutput.add("OI! There is an error with your get close command!");
+				}
 				break;
 			case "/debug.getVar":
 				try{
@@ -379,6 +413,13 @@ public class CommandParser{
 		}
 		return -1;
 	}
+	/**
+	 * Parses all commands without arguments.
+	 * @param cmd Main part of command ( EX: /debug.help: )
+	 * @param args All arguments following command ( EX: true )
+	 * @param startDepth Offset for Multicommand's 'commands' array.
+	 * @return Returns '-1' if the command is consumed, '-2' if there is an error, '-3' if there is no command by name, and a value 0 or greater if it is goto. 
+	 */
     private static int parseInput(String cmd, String[] args, int startDepth) {
         switch (cmd) {
             case "/ping":
@@ -399,6 +440,13 @@ public class CommandParser{
         }
 	    return -1;
     }
+    /**
+     * Parses commands with one or more arguments.
+     * @param cmd Main part of command ( EX: /debug.help: )
+     * @param args All arguments following command ( EX: true )
+     * @param startDepth Offset for Multicommand's 'commands' array.
+     * @return Returns '-1' if the command is consumed, '-2' if there is an error, '-3' if there is no command by name, and a value 0 or greater if it is goto. 
+     */
     private static int parseAdvanceCommand(String cmd, String[] args, int startDepth) {
 		try{
 			switch(cmd){

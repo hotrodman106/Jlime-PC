@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Created by Coolway99 on 2015-01-24
  *
  * @author Coolway99 (xxcoolwayxx@gmail.com)
+ * @author hotrodman106 (Java Docs)
  */
 public class Command{
 	private final String cmd;
