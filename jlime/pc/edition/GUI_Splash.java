@@ -19,11 +19,13 @@ import javax.swing.JWindow;
 
  public class GUI_Splash extends JWindow { 
 	 URL image = getClass().getResource("assets/images/javalime.png");
+	 JProgressBar progress = new JProgressBar();
 	 public GUI_Splash() { 
 		 try { 
 			 setSize(480,530); 
 			 setBackground(new Color(0, 255, 0, 0));
 			 setLocationRelativeTo(null); 
+			 this.getContentPane().add(progress);
 			 show(); 
 			 Thread.sleep(4000); 
 			 dispose();
