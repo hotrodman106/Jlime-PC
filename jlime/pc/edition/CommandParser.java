@@ -12,7 +12,8 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 /**
- * Created by hotrodman106 and Coolway99 on 1/1/2015.
+ * The main class used for parsing the commands.
+ * @author Coolway99
  */
 public class CommandParser{
 	private static final String r = "\n";
@@ -56,7 +57,7 @@ public class CommandParser{
 			consoleOutput.clear();
 		}
 	}
-	
+
 	/**
 	 * Replaces a variable in the users script with its value.
 	 *
@@ -69,13 +70,15 @@ public class CommandParser{
 		if(booleanList.get(key) != null){ return Boolean.toString(booleanList.get(key)); }
 		return null;
 	}
-	
+
 	/**
-	 * The root of the command parser. Decides where to send the command based
-	 * of its contents.
+	 * The start of the command parser, raw user-input should through here,
+	 * though anything calling nested commands should instead do
+	 * {@link #doCommand(String, int)}
 	 *
 	 * @param input String to be parsed.
-	 * @param debug Whether the command parser uses the debug parser or not.
+	 * @param debug Whether the command parser goes through the debug parser or
+	 * not.
 	 */
 	public static void inputCommand(String[] input, boolean debug){
 		for(int x = 0; x < input.length; x++){
@@ -104,7 +107,11 @@ public class CommandParser{
 		}
 		flush(true);
 	}
-	
+
+	/**
+	 * @param input
+	 * @param debug
+	 */
 	public static void inputCommand(String input, boolean debug){
 		multiCommandList.add(new MultiCommand(debug));
 		stringBuilderList.add(new StringBuilder());
@@ -116,11 +123,42 @@ public class CommandParser{
 		stringBuilderList.clear();
 		parsed = false;
 	}
-	
+
+	/**
+	 * Expands the command given to it and runs
+	 * {@link #doCommand(String, String, int, boolean)}
+	 *
+	 * @param c The command
+	 * @param startDepth The starting depth
+	 * @param debug Should use debug or not?
+	 * @return See the return value of
+	 * {@link #doCommand(String, String[], int, boolean)}
+	 * @see #doCommand(String, int)
+	 * @see #doCommand(String, String, int, boolean)
+	 * @see #doCommand(String, String[], int, boolean)
+	 */
 	public static int doCommand(Command c, int startDepth, boolean debug){
 		return doCommand(c.getCmd(), c.getArgs(), startDepth, debug);
 	}
-	
+
+	/**
+	 * Parses the input, then afterward runs it
+	 * 
+	 * @param cmd The command, not actually used by this method.. TODO
+	 * investigate
+	 * @param args The string of arguments that has to be parsed
+	 * @param startDepth The starting depth
+	 * @param debug Should go through debug afterwards?
+	 * @return See the return value of
+	 * {@link #doCommand(String, String[], int, boolean)}
+	 * @see #doCommand(String, int)
+	 * @see #doCommand(Command, int, boolean)
+	 * @see #doCommand(String, String[], int, boolean)
+	 */
+	/*
+	 * TODO investigate if we can remove "cmd", it's not used due to the way it
+	 * actually goes through multicommand to use the methods
+	 */
 	public static int doCommand(String cmd, String args, int startDepth, boolean debug){
 		if(!parsed && args != null){
 			char[] in = args.toCharArray();
@@ -244,18 +282,45 @@ public class CommandParser{
 		}
 		return multiCommandList.get(startDepth).run(startDepth);
 	}
-	
+
+	/**
+	 * Decides where to send the command
+	 *
+	 * @param cmd The command
+	 * @param args Arguments for the command, can be null
+	 * @param startDepth The starting depth for the command
+	 * @param debug Should go through debug?
+	 * @return Returns '-1' if the command is consumed, '-2' if there is an
+	 * error, '-3' if there is no command by name, and a value 0 or greater if
+	 * it is goto.
+	 * @see #doCommand(String, int)
+	 * @see #doCommand(Command, int, boolean)
+	 * @see #doCommand(String, String, int, boolean)
+	 */
 	public static int doCommand(String cmd, String[] args, int startDepth, boolean debug){
 		if(cmd.startsWith("!")){ return header(cmd, args); }
 		if(debug){ return debug(cmd, args, startDepth); }
 		return parseInput(cmd, args, startDepth);
 	}
-	
+
+	/**
+	 * This is what's usually called for nested arguments. It expects to have
+	 * either a command in parentheses or a simple command without any
+	 * arguments.
+	 * 
+	 * @param cmd The command
+	 * @param startDepth The starting depth
+	 * @return See the return value of
+	 * {@link #doCommand(String, String[], int, boolean)}
+	 * @see #doCommand(Command, int, boolean)
+	 * @see #doCommand(String, String, int, boolean)
+	 * @see #doCommand(String, String[], int, boolean)
+	 */
 	public static int doCommand(String cmd, int startDepth){
 		if(cmd.startsWith("\u0005")){ return getOut(cmd, startDepth); }
 		return parseInput(cmd, null, startDepth);
 	}
-	
+
 	/**
 	 * Handles command's arguments
 	 *
@@ -265,7 +330,7 @@ public class CommandParser{
 	 * @param startDepth Offset for 'commands' array.
 	 * @param consoleOutput The array that stores all output to be printed to
 	 * console.
-	 * @return Returns a list of arguments
+	 * @return Returns a list of arguments, now expanded by one level
 	 */
 	public static String[] parseArgs(String[] args, int offset, int length, int startDepth,
 			ArrayList<String> consoleOutput){
@@ -281,25 +346,24 @@ public class CommandParser{
 		}
 		return args;
 	}
-	
+
 	private static int getOut(String code, int startDepth){
 		int intCode =
 				Integer.parseInt(code.substring(code.indexOf('\u0005') + 1, code.indexOf('\u0006')));
 		return getOut(intCode, startDepth);
 	}
-	
+
 	private static int getOut(int code, int startDepth){
 		return multiCommandList.get(code).run(startDepth);
 	}
-	
+
 	/**
 	 * Parses all header commands.
 	 *
 	 * @param cmd Main part of command ( EX: !import: )
 	 * @param args All arguments following command ( EX: true )
-	 * @return Returns '-1' if the command is consumed, '-2' if there is an
-	 * error, '-3' if there is no command by name, and a value 0 or greater if
-	 * it is goto.
+	 * @return The same thing {@link #doCommand(String, String[], int, boolean)}
+	 * returns
 	 */
 	private static int header(String cmd, String[] args){
 		try{
@@ -332,18 +396,17 @@ public class CommandParser{
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Parses commands with the 'debug.' prefix
 	 *
 	 * @param cmd Main part of command ( EX: /debug.help: )
 	 * @param args All arguments following command ( EX: true )
 	 * @param startDepth Offset for Multicommand's 'commands' array.
-	 * @return Returns '-1' if the command is consumed, '-2' if there is an
-	 * error, '-3' if there is no command by name, and a value 0 or greater if
-	 * it is goto.
+	 * @return See the return value of
+	 * {@link #doCommand(String, String[], int, boolean)}
 	 */
-	
+
 	private static int debug(String cmd, String[] args, int startDepth){
 		switch(cmd){
 			case "/debug.help":
@@ -459,16 +522,15 @@ public class CommandParser{
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Parses all commands without arguments.
 	 *
 	 * @param cmd Main part of command ( EX: /debug.help: )
 	 * @param args All arguments following command ( EX: true )
 	 * @param startDepth Offset for Multicommand's 'commands' array.
-	 * @return Returns '-1' if the command is consumed, '-2' if there is an
-	 * error, '-3' if there is no command by name, and a value 0 or greater if
-	 * it is goto.
+	 * @return See the return value of
+	 * {@link #doCommand(String, String[], int, boolean)}
 	 */
 	private static int parseInput(String cmd, String[] args, int startDepth){
 		switch(cmd){
@@ -490,7 +552,7 @@ public class CommandParser{
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Parses commands with one or more arguments.
 	 *
@@ -562,7 +624,7 @@ public class CommandParser{
 						if(args.length > 2){
 							verbose = Boolean.parseBoolean(args[2]);
 						}
-						
+
 						booleanList.remove(name);
 						intList.remove(name);
 						stringList.put(name, string);
@@ -584,7 +646,7 @@ public class CommandParser{
 						}
 						String name = args[0];
 						int integer = Integer.parseInt(args[1]);
-						
+
 						booleanList.remove(name);
 						stringList.remove(name);
 						intList.put(name, integer);
@@ -606,7 +668,7 @@ public class CommandParser{
 						}
 						String name = args[0];
 						boolean b = Boolean.parseBoolean(args[1]);
-						
+
 						stringList.remove(name);
 						intList.remove(name);
 						booleanList.put(name, b);
@@ -635,14 +697,12 @@ public class CommandParser{
 					try{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
 						try{
-							if(Boolean.parseBoolean(args[0])){
-								return doCommand(args[1], startDepth);
-							} else {
-								if(!args[0].toUpperCase().equals("FALSE")){ throw new Exception(); }
-								if(args.length > 2){ return doCommand(args[2], startDepth); }
-								return doCommand("\u0002", startDepth);
-							}
+							if(Boolean.parseBoolean(args[0])){ return doCommand(args[1], startDepth); }
+							if(!args[0].toUpperCase().equals("FALSE")){ throw new Exception(); }
+							if(args.length > 2){ return doCommand(args[2], startDepth); }
+							return doCommand("\u0002", startDepth);
 						} catch(Exception e){}
+
 						String[] num = args[0].split("[<=>]+");
 						String operator = args[0].split("\\d+")[1];
 						int var1 = Integer.parseInt(num[0]);
@@ -657,39 +717,24 @@ public class CommandParser{
 						switch(operator){
 							case "==":
 							case "=":
-								if(var1 == var2){
-									return doCommand(trueCommand, startDepth);
-								} else {
-									return doCommand(falseCommand, startDepth);
-								}
-								
+								if(var1 == var2){ return doCommand(trueCommand, startDepth); }
+								return doCommand(falseCommand, startDepth);
+
 							case "<":
-								if(var1 < var2){
-									return doCommand(trueCommand, startDepth);
-								} else {
-									return doCommand(falseCommand, startDepth);
-								}
-								
+								if(var1 < var2){ return doCommand(trueCommand, startDepth); }
+								return doCommand(falseCommand, startDepth);
+
 							case ">":
-								if(var1 > var2){
-									return doCommand(trueCommand, startDepth);
-								} else {
-									return doCommand(falseCommand, startDepth);
-								}
-								
+								if(var1 > var2){ return doCommand(trueCommand, startDepth); }
+								return doCommand(falseCommand, startDepth);
+
 							case "<=":
-								if(var1 <= var2){
-									return doCommand(trueCommand, startDepth);
-								} else {
-									return doCommand(falseCommand, startDepth);
-								}
-								
+								if(var1 <= var2){ return doCommand(trueCommand, startDepth); }
+								return doCommand(falseCommand, startDepth);
+
 							case ">=":
-								if(var1 >= var2){
-									return doCommand(trueCommand, startDepth);
-								} else {
-									return doCommand(falseCommand, startDepth);
-								}
+								if(var1 >= var2){ return doCommand(trueCommand, startDepth); }
+								return doCommand(falseCommand, startDepth);
 							default:
 								consoleOutput.add("OI! Invalid Operator for your if statement!");
 								return -2;
@@ -753,7 +798,7 @@ public class CommandParser{
 					break;
 				default:
 					return ModuleManager.run(moduleList, cmd, args, startDepth, consoleOutput);
-					
+
 			}
 		} catch(ArrayIndexOutOfBoundsException e){
 			consoleOutput.add("OI! A command didn't have the right number of arguments!");
