@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
  * @author hotrodman106
  */
 public class GUI_Modules extends javax.swing.JFrame {
+private static final long serialVersionUID = 1546809525469020670L;
 private Boolean allowImporting = true;
     /**
      * Creates new form GUI_Modules
@@ -57,22 +58,28 @@ private Boolean allowImporting = true;
 
         jList1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            private static final long serialVersionUID = -3174343151567408378L;
+			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            @Override
+			public int getSize() { return strings.length; }
+            @Override
+			public Object getElementAt(int i) { return strings[i]; }
         });
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            @Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jList1MouseClicked(evt);
             }
         });
         jList1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
+            @Override
+			public void keyPressed(java.awt.event.KeyEvent evt) {
                 jList1KeyPressed(evt);
             }
         });
         jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+            @Override
+			public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jList1ValueChanged(evt);
             }
         });
@@ -80,7 +87,8 @@ private Boolean allowImporting = true;
 
         jButton1.setText("Select");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
@@ -139,7 +147,7 @@ if(allowImporting != false){
         }
 }
     }//GEN-LAST:event_jList1KeyPressed
-private void addImport(int index){
+private static void addImport(int index){
  GUI.jTextArea2.append("!import:" + ModuleManager.getList()[index] + "\n");
 }
     /**
@@ -171,7 +179,8 @@ private void addImport(int index){
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 new GUI_Modules().setVisible(true);
             }
         });

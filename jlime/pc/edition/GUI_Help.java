@@ -1,7 +1,7 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this template file, choose Tools | Templates and open the template
+ * in the editor.
  */
 package jlime.pc.edition;
 
@@ -29,61 +29,64 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.BevelBorder;
 
 /**
- *
- * @author hotrodman106 
+ * @author hotrodman106
  * @author Coolway99
  */
-public class GUI_Help extends JFrame {
+@SuppressWarnings("javadoc")
+public class GUI_Help extends JFrame{
 	private static final long serialVersionUID = 4988853886501631977L;
 	public static final String r = "\n";
 	private final HashMap<String, Integer> componentList = new HashMap<>();
 	private final JTabbedPane tabbedPane = new JTabbedPane();
-	
-	public GUI_Help() {
-		setIconImage(new ImageIcon(getClass().getResource("assets/images/help.png")).getImage());
-		
+
+	public GUI_Help(){
+		this.setIconImage(new ImageIcon(this.getClass().getResource("assets/images/help.png"))
+				.getImage());
+
 		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(GUI_Help.class.getResource("help.html").openStream()));
-		} catch (IOException e2) {
+		try{
+			reader =
+					new BufferedReader(new InputStreamReader(GUI_Help.class
+							.getResource("help.html").openStream()));
+		} catch(IOException e2){
 			e2.printStackTrace();
 		}
 		StringBuilder help = new StringBuilder();
 		String temp = null;
-		try {
+		try{
 			temp = reader.readLine();
-		} catch (IOException e1) {
+		} catch(IOException e1){
 			e1.printStackTrace();
 		}
 		while(temp != null){
 			help.append(temp + r);
-			try {
+			try{
 				temp = reader.readLine();
-			} catch (IOException e) {
+			} catch(IOException e){
 				e.printStackTrace();
 			}
 		}
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		this.setTitle("JLime Help Window");
 		this.setSize(560, 440);
-		this.add(tabbedPane);
+		this.add(this.tabbedPane);
 		this.addDefaultTab("JLime", help.toString(), "html");
-		try {
+		try{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
+		} catch(ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void addModTab(Component component, String modName){
-		JScrollPane scrollPane = new JScrollPane(component,
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		tabbedPane.addTab(modName, scrollPane);
-		componentList.put(modName, tabbedPane.indexOfComponent(scrollPane));
+		JScrollPane scrollPane =
+				new JScrollPane(component, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+						JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		this.tabbedPane.addTab(modName, scrollPane);
+		this.componentList.put(modName, this.tabbedPane.indexOfComponent(scrollPane));
 	}
-	
+
 	public void addDefaultTab(String modName, String text, String fileType){
 		switch(fileType){
 			case "txt":
@@ -93,31 +96,26 @@ public class GUI_Help extends JFrame {
 				JList<String> list = new JList<>();
 				JLabel label = new JLabel();
 				JPanel panel = new JPanel();
-				label.setFont(new Font("Tahoma", Font.PLAIN , 18));
+				label.setFont(new Font("Tahoma", Font.PLAIN, 18));
 				label.setText(title);
 				panel.setBackground(new Color(255, 255, 255));
 				panel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-				
+
 				for(int x = 1; x < in.length; x++){
-					listModel.addElement(in[x]+r);
+					listModel.addElement(in[x] + r);
 				}
 				list.setModel(listModel);
-				
+
 				GroupLayout layout = new GroupLayout(panel);
 				panel.setLayout(layout);
-				
-				layout.setHorizontalGroup(layout.createParallelGroup()
-						.addGroup(layout.createSequentialGroup()
-								.addGap(195)
-								.addComponent(label)
-								.addGap(195))
-						.addComponent(list));
-				layout.setVerticalGroup(
-						layout.createSequentialGroup()
-						.addComponent(label)
-						.addGap(3, 3, 3)
-						.addComponent(list)
-						);
+
+				layout.setHorizontalGroup(layout
+						.createParallelGroup()
+						.addGroup(
+								layout.createSequentialGroup().addGap(195).addComponent(label)
+										.addGap(195)).addComponent(list));
+				layout.setVerticalGroup(layout.createSequentialGroup().addComponent(label)
+						.addGap(3, 3, 3).addComponent(list));
 				this.addModTab(panel, modName);
 				break;
 			case "html":
@@ -132,8 +130,8 @@ public class GUI_Help extends JFrame {
 				break;
 		}
 	}
-	
+
 	public void removeModules(String modName){
-		tabbedPane.remove(componentList.remove(modName));
+		this.tabbedPane.remove(this.componentList.remove(modName));
 	}
 }
