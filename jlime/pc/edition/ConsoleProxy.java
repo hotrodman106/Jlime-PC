@@ -5,9 +5,23 @@ import java.io.IOException;
 
 import javax.swing.JTextArea;
 
+/**
+ * A proxy for the console, meant to be used for cross-compatibility reasons
+ * @author Coolway99
+ */
 public class ConsoleProxy {
 	private static JTextArea console = null;
+	/**
+	 * Variable to tell if the console is main or debug
+	 * @author hotrodman106
+	 */
 	public static JTextArea debugConsole = null;
+	/**
+	 * Initialization, since all it does it make the console variable the console
+	 * that is passed, can be used for changing where the output goes<br />
+	 * <b>Coolway99 glares at hotrodman106</b>
+	 * @param console The console for everything to output too
+	 */
 	public static void init(JTextArea console){
 		ConsoleProxy.console = console;
 	}
@@ -40,9 +54,8 @@ public class ConsoleProxy {
 	public static String getText(){
 		if(GUI_Console.isVisible == false){
 		return console.getText();
-		}else{
-		return debugConsole.getText();
 		}
+		return debugConsole.getText();
 	}
 	/**
 	 * Sets the foreground color of either the main console or the debug console.
