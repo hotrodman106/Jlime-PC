@@ -33,6 +33,7 @@ import javax.swing.border.BevelBorder;
  * @author hotrodman106 
  * @author Coolway99
  */
+@SuppressWarnings("javadoc")
 public class GUI_Help extends JFrame {
 	private static final long serialVersionUID = 4988853886501631977L;
 	public static final String r = "\n";
