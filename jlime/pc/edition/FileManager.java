@@ -14,15 +14,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- *
- * @author hotrodman106
+ * @author hotrodman106 (Coding and Java Docs)
  */
 public class FileManager {
-
-    static String readFile() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+	/**
+	 * Gets the contents of a saved jlime file.
+	 * @param file Directory of file to be opened.
+	 * @return Returns a string containing every line in chosen file.
+	 * @throws IOException Throws IOException if file does not exist.
+	 */
     public static  String readFile( String file ) throws IOException {
     BufferedReader reader = new BufferedReader( new FileReader (file));
     String         line = null;
@@ -37,7 +37,12 @@ public class FileManager {
     return stringBuilder.toString();
 }
 
-    
+/**
+ * Either overwrites or creates a new .jlime file containing all text typed by user.    
+ * @param filename Name of file to write to.
+ * @param input A String containing all code written.
+ * @throws FileNotFoundException Throws FileNotFoundException if the file does not exist.
+ */
     public static void writeFile(String filename, String input) throws FileNotFoundException{
       PrintWriter writer = new PrintWriter(filename);
       String[] lines = input.split("\n");
@@ -47,6 +52,18 @@ public class FileManager {
       writer.close();
     }
     
+    /**
+     * Either overwrites or creates a new .jlimesettings file containing all of the user's settings.  
+     * @param debug Should /debug commands be allowed while coding?
+     * @param beta Should beta commands be allowed while coding? (Unused)
+     * @param consoleB String containing the RGB value for the console's background color.
+     * @param consoleF String containing the RGB value for the console's foreground color.
+     * @param sWindowB String containing the RGB value for the scripting window's foreground color.
+     * @param sWindowF String containing the RGB value for the scripting window's background color.
+     * @param sWindow String containing the font and the font size for the scripting window. ( EX: Monospaced,17 )
+     * @param console String containing the font and the font size for the console. ( EX: Monospaced,17 )
+     * @throws FileNotFoundException Throws FileNotFoundException if settings file does not exist.
+     */
     public static void writeSettings(Boolean debug, Boolean beta, String consoleB, String consoleF, String sWindowB, String sWindowF, String sWindow, String console) throws FileNotFoundException{
       PrintWriter writer = new PrintWriter("settings.jlimesettings");
       System.out.println("settings.jlimesettings");
@@ -60,6 +77,12 @@ public class FileManager {
       writer.println(console);
       writer.close();
     }
+    
+    /**
+     * Reads the .jlimesettings file and sets the settings appropriately.
+     * @param file File to be read from.
+     * @throws IOException Throws IOException if file does not exist.
+     */
     
     public static void readsettingsFile(String file) throws IOException {
     BufferedReader reader = new BufferedReader( new FileReader (file));

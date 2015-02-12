@@ -29,10 +29,10 @@ import javax.swing.text.BadLocationException;
 public class GUI extends javax.swing.JFrame {
            private String lastFile = "";
            public static boolean useDebug;
-	public final GUI_Help help = new GUI_Help();;
+	public final GUI_Help help = new GUI_Help();
 	public static final GUI gui = new GUI();
-	public static final double version = 5.0;
-	public static final String versionName = "Limeade";
+	public static final double version = 6.0;
+	public static final String versionName = "Mojito";
 
     /**
      * Creates new form NewJFrame
@@ -48,6 +48,7 @@ public class GUI extends javax.swing.JFrame {
        setIconImage(new ImageIcon(getClass().getResource("assets/images/javalime.png")).getImage());
        updateLineCount();
        ConsoleProxy.init(jTextArea1);
+       setExtendedState(MAXIMIZED_BOTH);
     }
 
     /**
@@ -92,19 +93,23 @@ public class GUI extends javax.swing.JFrame {
         jTextArea2.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jTextArea2.setRows(5);
         jTextArea2.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+            @Override
+			public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 jTextArea2CaretUpdate(evt);
             }
         });
         jTextArea2.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            @Override
+			public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+            @Override
+			public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
                 jTextArea2InputMethodTextChanged(evt);
             }
         });
         jTextArea2.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+            @Override
+			public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 jTextArea2PropertyChange(evt);
             }
         });
@@ -149,21 +154,26 @@ public class GUI extends javax.swing.JFrame {
         jMenu1.setText("File");
         jMenu1.setRolloverEnabled(false);
         jMenu1.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+            @Override
+			public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jMenu1StateChanged(evt);
             }
         });
         jMenu1.addMenuListener(new javax.swing.event.MenuListener() {
-            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            @Override
+			public void menuCanceled(javax.swing.event.MenuEvent evt) {
             }
-            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            @Override
+			public void menuDeselected(javax.swing.event.MenuEvent evt) {
             }
-            public void menuSelected(javax.swing.event.MenuEvent evt) {
+            @Override
+			public void menuSelected(javax.swing.event.MenuEvent evt) {
                 jMenu1MenuSelected(evt);
             }
         });
         jMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenu1ActionPerformed(evt);
             }
         });
@@ -172,7 +182,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/new.png"))); // NOI18N
         jMenuItem1.setText("New");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
             }
         });
@@ -182,7 +193,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/run.png"))); // NOI18N
         jMenuItem2.setText("Run");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
             }
         });
@@ -192,7 +204,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/save.png"))); // NOI18N
         jMenuItem6.setText("Save");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem6ActionPerformed(evt);
             }
         });
@@ -202,7 +215,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/save.png"))); // NOI18N
         jMenuItem3.setText("Save As");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
             }
         });
@@ -212,7 +226,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/load.png"))); // NOI18N
         jMenuItem4.setText("Load");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
             }
         });
@@ -222,7 +237,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/clear.png"))); // NOI18N
         jMenuItem5.setText("Clear Console");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
             }
         });
@@ -237,7 +253,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/cut.png"))); // NOI18N
         jMenuItem8.setText("Cut");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem8ActionPerformed(evt);
             }
         });
@@ -247,7 +264,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/copy.png"))); // NOI18N
         jMenuItem9.setText("Copy");
         jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem9ActionPerformed(evt);
             }
         });
@@ -257,7 +275,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/paste.png"))); // NOI18N
         jMenuItem10.setText("Paste");
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem10ActionPerformed(evt);
             }
         });
@@ -267,7 +286,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/select.png"))); // NOI18N
         jMenuItem11.setText("Select All");
         jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem11ActionPerformed(evt);
             }
         });
@@ -282,7 +302,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/console.png"))); // NOI18N
         jMenuItem12.setText("Console Window");
         jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem12ActionPerformed(evt);
             }
         });
@@ -292,7 +313,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/settings.png"))); // NOI18N
         jMenuItem7.setText("Settings Window");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem7ActionPerformed(evt);
             }
         });
@@ -302,7 +324,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/help.png"))); // NOI18N
         jMenuItem14.setText("Help Window");
         jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem14ActionPerformed(evt);
             }
         });
@@ -312,7 +335,8 @@ public class GUI extends javax.swing.JFrame {
         jMenuItem13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/modules.png"))); // NOI18N
         jMenuItem13.setText("Modules Window");
         jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem13ActionPerformed(evt);
             }
         });
@@ -375,7 +399,7 @@ public class GUI extends javax.swing.JFrame {
  
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private static void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         System.out.println(useDebug);
         final String[] lines = jTextArea2.getText().toString().split("\n");
         (new Thread(){
@@ -390,7 +414,7 @@ public class GUI extends javax.swing.JFrame {
 showSaveAs();    
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+    private static void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         jTextArea1.setText("");
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
@@ -407,14 +431,14 @@ showSaveAs();
    
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+    private static void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
       StringSelection stringSelection = new StringSelection (jTextArea2.getSelectedText().toString());
       Clipboard clpbrd = Toolkit.getDefaultToolkit ().getSystemClipboard ();
       clpbrd.setContents (stringSelection, null);
       jTextArea2.setText(jTextArea2.getText().replace(jTextArea2.getSelectedText(),""));
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
-    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+    private static void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
          Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
          String result = "";
         try {
@@ -426,17 +450,17 @@ showSaveAs();
          
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
-    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+    private static void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
 StringSelection stringSelection = new StringSelection (jTextArea2.getSelectedText().toString());
 Clipboard clpbrd = Toolkit.getDefaultToolkit ().getSystemClipboard ();
 clpbrd.setContents (stringSelection, null);
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
-    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+    private static void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
         jTextArea2.selectAll();
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
-    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+    private static void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
        GUI_Console g = new GUI_Console();
        g.setVisible(true);
     }//GEN-LAST:event_jMenuItem12ActionPerformed
@@ -468,12 +492,12 @@ clpbrd.setContents (stringSelection, null);
        }
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+    private static void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         GUI_Settings s = new GUI_Settings();
         s.setVisible(true);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
-    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+    private static void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
      GUI_Modules q = new GUI_Modules();
      q.setVisible(true);
     }//GEN-LAST:event_jMenuItem13ActionPerformed

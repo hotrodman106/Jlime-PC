@@ -5,20 +5,27 @@
  */
 package jlime.pc.edition;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
+
 import javax.swing.ImageIcon;
 
 /**
  *
  * @author hotrodman106
  */
-public class GUI_Console extends javax.swing.JFrame {
-
+public class GUI_Console extends javax.swing.JFrame implements WindowListener{
+public static Boolean isVisible = false;
     /**
      * Creates new form GUI_Console
      */
     public GUI_Console() {
         initComponents();
         setIconImage(new ImageIcon(getClass().getResource("assets/images/console.png")).getImage());
+        addWindowListener(this);
+        ConsoleProxy.debugConsole = jTextArea1;
     }
 
     /**
@@ -132,4 +139,46 @@ jTextField1.setText("");
     public javax.swing.JTextArea jTextArea1;
     public javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+	@Override
+	public void windowActivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent arg0) {
+		isVisible = false;
+		System.out.println(isVisible);
+	}
+
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {
+		isVisible = true;
+		System.out.println(isVisible);
+		
+	}
+
 }

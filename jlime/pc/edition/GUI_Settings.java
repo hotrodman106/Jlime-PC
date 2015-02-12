@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
  * @author hotrodman106
  */
 public class GUI_Settings extends javax.swing.JFrame {
+private static final long serialVersionUID = 1L;
 private Color consoleBackground = Color.BLACK;
 private Color consoleFontColor = Color.GREEN;
 private Color scriptingWindowBackground = Color.WHITE;
@@ -93,6 +94,8 @@ private Color scriptingWindowFontColor = Color.BLACK;
     
     String[] sWindowFRGB = lines[5].split(",");
     scriptingWindowFontColor = new Color(Integer.parseInt(sWindowFRGB[0]),Integer.parseInt(sWindowFRGB[1]),Integer.parseInt(sWindowFRGB[2]));
+    
+    reader.close();
       }catch (IOException ex) {
             try {
                 FileManager.writeSettings(false, false, "0,0,0", "51,255,51", "255,255,255", "0,0,0", "Tahoma,14", "Monospaced,13");
@@ -143,7 +146,8 @@ private Color scriptingWindowFontColor = Color.BLACK;
 
         jCheckBox1.setText("Allow debug commands while scripting");
         jCheckBox1.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+            @Override
+			public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jCheckBox1StateChanged(evt);
             }
         });
@@ -160,14 +164,16 @@ private Color scriptingWindowFontColor = Color.BLACK;
 
         jButton1.setText("Change Console Background Color");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
         jButton2.setText("Change Console Font Color");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
@@ -186,21 +192,24 @@ private Color scriptingWindowFontColor = Color.BLACK;
 
         jButton3.setText("Change Scripting Window Background Color");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
         jButton4.setText("Change Scripting Window Font Color");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
 
         jButton5.setText("Save Settings");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
@@ -223,7 +232,8 @@ private Color scriptingWindowFontColor = Color.BLACK;
 
         jButton6.setText("Cancel");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
@@ -446,7 +456,8 @@ private Color scriptingWindowFontColor = Color.BLACK;
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 new GUI_Settings().setVisible(true);
             }
         });
