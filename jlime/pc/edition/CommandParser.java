@@ -270,6 +270,10 @@ public class CommandParser{
 							command = temp;
 							temp = "";
 							break;
+						case '[':
+//							break;
+						case ']':
+//							break;
 						default:
 							temp += y;
 							break;
