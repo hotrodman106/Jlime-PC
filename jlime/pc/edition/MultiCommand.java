@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by Coolway99 on 2015-01-07.
  *
- * @author Coolway99 (xxcoolwayxx@gmail.com)
+ * @author Coolway99
  * @author hotrodman106 (Java Docs)
  */
 public class MultiCommand{

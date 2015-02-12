@@ -40,6 +40,12 @@ public class GUI_Help extends JFrame{
 	private final JTabbedPane tabbedPane = new JTabbedPane();
 
 	public GUI_Help(){
+		try{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch(ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e){
+			e.printStackTrace();
+		}
 		this.setIconImage(new ImageIcon(this.getClass().getResource("assets/images/help.png"))
 				.getImage());
 
@@ -71,12 +77,7 @@ public class GUI_Help extends JFrame{
 		this.setSize(560, 440);
 		this.add(this.tabbedPane);
 		this.addDefaultTab("JLime", help.toString(), "html");
-		try{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch(ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e){
-			e.printStackTrace();
-		}
+
 	}
 
 	public void addModTab(Component component, String modName){

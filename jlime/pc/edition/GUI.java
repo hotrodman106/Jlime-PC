@@ -5,17 +5,14 @@
  */
 package jlime.pc.edition;
 
-import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,8 +31,8 @@ public class GUI extends javax.swing.JFrame {
            public static boolean useDebug;
 	public final GUI_Help help = new GUI_Help();
 	public static final GUI gui = new GUI();
-	public static final double version = 5.0;
-	public static final String versionName = "Limeade";
+	public static final double version = 6.0;
+	public static final String versionName = "Mojito";
 
     /**
      * Creates new form NewJFrame

@@ -22,11 +22,10 @@ public class GUI_Splash extends JWindow {
 			 setBackground(new Color(0, 255, 0, 0));
 			 setLocationRelativeTo(null); 
 			 this.getContentPane().add(progress);
-			 setVisible(true)	; 
+			 setVisible(true); 
 			 Thread.sleep(4000); 
 			 dispose();
-			 GUI z = new GUI();
-			 z.setVisible(true);
+			 GUI.main(null);
 } catch(Exception exception) { 
 	JOptionPane.showMessageDialog((java.awt.Component) null,"Error"+exception.getMessage(), "Error:", JOptionPane.DEFAULT_OPTION); 
 	} } 
