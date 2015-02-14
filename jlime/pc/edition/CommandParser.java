@@ -13,22 +13,19 @@ import javax.swing.JOptionPane;
 
 /**
  * The main class used for parsing the commands.
+ * Version:7
  * @author Coolway99
  */
 public class CommandParser{
 	private static final String r = "\n";
-	private static HashMap<String, String> stringList = new HashMap<>();
-	private static HashMap<String, Integer> intList = new HashMap<>();
-	private static HashMap<String, Boolean> booleanList = new HashMap<>();
+	private static HashMap<String, String> varList = new HashMap<>();
 	private static ArrayList<String> consoleOutput = new ArrayList<>();
 	/*
 	 * \u0005<index>\u0006 will reference the multiCommand with the specified
 	 * index
 	 */
-	private static ArrayList<MultiCommand> multiCommandList = new ArrayList<>();
-	private static ArrayList<StringBuilder> stringBuilderList = new ArrayList<>();
+	private static final ArrayList<MultiCommand> commandList = new ArrayList<>();
 	private static ArrayList<String> moduleList = new ArrayList<>();
-	private static boolean parsed = false;
 
 	/**
 	 * Outputs whatever is currently in the consoleOutput Array list to the
@@ -65,10 +62,7 @@ public class CommandParser{
 	 * @return Returns the value of the variable.
 	 */
 	private static String getVar(String key){
-		if(stringList.get(key) != null){ return stringList.get(key); }
-		if(intList.get(key) != null){ return Integer.toString(intList.get(key)); }
-		if(booleanList.get(key) != null){ return Boolean.toString(booleanList.get(key)); }
-		return null;
+		return varList.get(key);
 	}
 
 	/**
@@ -81,52 +75,157 @@ public class CommandParser{
 	 * not.
 	 */
 	public static void inputCommand(String[] input, boolean debug){
+		String error = "";
 		for(int x = 0; x < input.length; x++){
 			String s = input[x];
 			if(s.startsWith("::")){
 				continue;
 			}
-			multiCommandList.add(new MultiCommand(debug));
-			stringBuilderList.add(new StringBuilder());
-			String[] in = s.replaceFirst(":", "\u0000").split("\u0000");
-			multiCommandList.get(0).put(new Command(in[0]));
-			int y = doCommand(in[0], (in.length == 2 ? in[1] : null), 0, debug);
-			multiCommandList.clear();
-			stringBuilderList.clear();
-			parsed = false;
-			if(y != -1){
-				if(y == -2){
+			commandList.add(new MultiCommand(debug));
+			ReturnInfo ret = parser(s.toCharArray(), 0, 0);
+			if(ret != null){
+				for(String string : ret.additionalData){
+					error += string+r;
+				}
+				JOptionPane.showMessageDialog(GUI.jTextArea2, "OI! Error while parsing!" + r
+						+ "There is an error on line " + (x + 1) + "!"+r
+						+ "The information about the error is as follows:"+r
+						+ error, "ERROR!", JOptionPane.ERROR_MESSAGE);
+				break;
+			}
+			ret = commandList.get(0).run(0);
+			commandList.clear();
+			if(ret.getRetCode() != -1){
+				if(ret.getRetCode() == -2){
+					for(String string : ret.additionalData){
+						error += string+r;
+					}
 					JOptionPane.showMessageDialog(GUI.jTextArea2, "OI! that's not right!" + r
-							+ consoleOutput.remove(consoleOutput.size() - 1) + r
-							+ "There is an error on line " + (x + 1) + "!", "ERROR!",
-							JOptionPane.ERROR_MESSAGE);
+							+ "There is an error on line " + (x + 1) + "!"+r
+							+ "The information about the error is as follows:"+r
+							+ error, "ERROR!", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
-				x = y - 1;
+				x = ret.getRetCode() - 1;
 			}
 		}
 		flush(true);
 	}
 
 	/**
+	 * Takes a single line of raw user input 
 	 * @param input
 	 * @param debug
 	 */
 	public static void inputCommand(String input, boolean debug){
-		multiCommandList.add(new MultiCommand(debug));
-		stringBuilderList.add(new StringBuilder());
-		String[] in = input.replaceFirst(":", "\u0000").split("\u0000");
-		multiCommandList.get(0).put(new Command(in[0]));
-		doCommand(in[0], (in.length == 2 ? in[1] : null), 0, debug);
+		commandList.add(new MultiCommand(debug));
+		ReturnInfo ret = parser(input.toCharArray(), 0, 0);
+		for(String s : ret.getAdditionalData()){
+			consoleOutput.add(s);
+		}
 		flush(true);
-		multiCommandList.clear();
-		stringBuilderList.clear();
-		parsed = false;
+		commandList.clear();
 	}
 
+	private static ReturnInfo parser(char[] chars, int offset, int key){
+		StringBuilder ret = new StringBuilder();
+		StringBuilder temp = new StringBuilder();
+		boolean escaped = false;
+		boolean inVar = false;
+		String command = null;
+		int commandIndex = 0;
+		for(int x = offset; x < chars.length; x++){
+			char y = chars[x];
+			if(escaped){
+				temp.append(y);
+				continue;
+			}
+			switch(y){
+				case '%':
+					if(inVar){
+						inVar = false;
+						String var = getVar(temp.toString());
+						if(var != null){
+							ret.append(temp);
+							temp.setLength(0);
+						} else {
+							return new ReturnInfo(-2, "Oi! That was not a valid variable!", "Name: " + temp, "At position "+(x+1));
+						}
+					} else {
+						inVar = true;
+						ret.append(temp);
+						temp.setLength(0);
+					}
+					break;
+				case '\\':
+					escaped = true;
+					break;
+				case '(':{
+					commandList.add(new MultiCommand(false));
+					ReturnInfo returned = parser(chars, ++x, commandList.size()-1);
+					if(returned.getRetCode() < 0){
+						return returned;
+					}
+					x = returned.getRetCode();
+					ret.append("\u0005"+returned.getAdditionalData().get(0)+"\u0006");
+					break;
+				}
+				case ')':{
+					if(command == null){
+						commandList.get(key).put(new Command(ret.append(temp).toString()));
+					} else {
+						commandList.get(key).get(commandIndex).addArg(ret.append(temp).toString());
+					}
+					return new ReturnInfo(x, ""+key);
+				}
+				case '&':
+					if(command == null){
+						commandList.get(key).put(new Command(ret.append(temp).toString()));
+					} else {
+						commandList.get(key).get(commandIndex).addArg(ret.append(temp).toString());
+						command = null;
+					}
+					temp.setLength(0);
+					ret.setLength(0);
+					commandIndex++;
+					break;
+				case ',':
+					if(command == null){
+						return new ReturnInfo(-2, "Error: command was not defined before , at"
+								+ "position "+(x+1));
+					}
+					commandList.get(key).get(commandIndex).addArg(ret.append(temp).toString());
+					temp.setLength(0);
+					ret.setLength(0);
+					break;
+				case ':':
+					if(command != null){
+						return new ReturnInfo(-2, "OI! You have : where you already have declared a command!",
+								"At position "+(x+1));
+					}
+					command = ret.append(temp).toString();
+					commandList.get(key).put(new Command(command));
+					temp.setLength(0);
+					ret.setLength(0);
+					break;
+				default:
+					temp.append(y);
+					break;
+			}
+		}
+		if(command == null){
+			commandList.get(key).put(new Command(ret.append(temp).toString()));
+		} else {
+			commandList.get(key).get(commandIndex).addArg(ret.append(temp).toString());
+		}
+		if(key != 0){
+			return new ReturnInfo(-2, "Error, unclosed parenthesies");
+		}
+		return null;
+	}
+	
 	/**
 	 * Expands the command given to it and runs
-	 * {@link #doCommand(String, String, int, boolean)}
 	 *
 	 * @param c The command
 	 * @param startDepth The starting depth
@@ -134,159 +233,12 @@ public class CommandParser{
 	 * @return See the return value of
 	 * {@link #doCommand(String, String[], int, boolean)}
 	 * @see #doCommand(String, int)
-	 * @see #doCommand(String, String, int, boolean)
 	 * @see #doCommand(String, String[], int, boolean)
 	 */
-	public static int doCommand(Command c, int startDepth, boolean debug){
+	public static ReturnInfo doCommand(Command c, int startDepth, boolean debug){
 		return doCommand(c.getCmd(), c.getArgs(), startDepth, debug);
 	}
-
-	/**
-	 * Parses the input, then afterward runs it
-	 * 
-	 * @param cmd The command, not actually used by this method.. TODO
-	 * investigate
-	 * @param args The string of arguments that has to be parsed
-	 * @param startDepth The starting depth
-	 * @param debug Should go through debug afterwards?
-	 * @return See the return value of
-	 * {@link #doCommand(String, String[], int, boolean)}
-	 * @see #doCommand(String, int)
-	 * @see #doCommand(Command, int, boolean)
-	 * @see #doCommand(String, String[], int, boolean)
-	 */
-	/*
-	 * TODO investigate if we can remove "cmd", it's not used due to the way it
-	 * actually goes through multicommand to use the methods
-	 */
-	public static int doCommand(String cmd, String args, int startDepth, boolean debug){
-		if(!parsed && args != null){
-			char[] in = args.toCharArray();
-			boolean inVar = false;
-			boolean escaped = false;
-			String temp = "";
-			String command = null;
-			ArrayList<Integer> depth = new ArrayList<>();
-			ArrayList<Integer> commandDepth = new ArrayList<>();
-			int level = 0;
-			depth.add(startDepth);
-			commandDepth.add(0);
-			for(int x = 0; x < in.length; x++){
-				char y = in[x];
-				if(escaped){
-					temp += y;
-					escaped = false;
-				} else {
-					switch(y){
-						case '%':
-							if(inVar){
-								inVar = false;
-								String var = getVar(temp);
-								if(var != null){
-									stringBuilderList.get(depth.get(level)).append(var);
-									temp = "";
-								} else {
-									consoleOutput.add("Oi! That was not a valid variable!" + r
-											+ "Name: " + temp);
-									return -2;
-								}
-							} else {
-								inVar = true;
-								stringBuilderList.get(depth.get(level)).append(temp);
-								temp = "";
-							}
-							break;
-						case '\\':
-							escaped = true;
-							break;
-						case '(':
-							multiCommandList.add(new MultiCommand(debug));
-							stringBuilderList.add(new StringBuilder());
-							depth.add(stringBuilderList.size() - 1);
-							stringBuilderList.get(depth.get(level++)).append(temp);
-							commandDepth.add(0);
-							temp = "";
-							command = null;
-							break;
-						case ')':
-							/*
-							 * if(command != null){ String s =
-							 * stringBuilderList.
-							 * get(depth.get(level)).append(temp).toString();
-							 * multiCommandList
-							 * .get(depth.get(level)).get(commandDepth
-							 * .get(level)).addArg(s); } else {
-							 * multiCommandList.get(depth.get(level)).put(new
-							 * Command(temp)); }
-							 * stringBuilderList.get(depth.get(
-							 * level-1)).append("\u0005" + depth.remove(level--)
-							 * + "\u0006"); command = null; temp = "";
-							 */
-							if(command != null){
-								multiCommandList
-										.get(depth.get(level))
-										.get(commandDepth.get(level))
-										.addArg(stringBuilderList.get(depth.get(level))
-												.append(temp).toString());
-							} else {
-								multiCommandList.get(depth.get(level)).put(new Command(temp));
-							}
-							stringBuilderList.get(depth.get(level - 1)).append(
-									"\u0005" + depth.remove(level--) + "\u0006");
-							temp = "";
-							command = null;
-							break;
-						case '&':
-							if(command != null){
-								multiCommandList
-										.get(depth.get(level))
-										.get(commandDepth.get(level))
-										.addArg(stringBuilderList.get(depth.get(level))
-												.append(temp).toString());
-							} else {
-								multiCommandList.get(depth.get(level)).put(new Command(temp));
-							}
-							stringBuilderList.set(depth.get(level), new StringBuilder());
-							commandDepth.set(level, commandDepth.get(level) + 1);
-							command = null;
-							temp = "";
-							break;
-						case ',':
-							multiCommandList
-									.get(depth.get(level))
-									.get(commandDepth.get(level))
-									.addArg(stringBuilderList.get(depth.get(level)).append(temp)
-											.toString());
-							stringBuilderList.set(depth.get(level), new StringBuilder());
-							temp = "";
-							break;
-						case ':':
-							if(command != null){
-								consoleOutput
-										.add("OI! You have : where you already have declared a command!");
-								return -2;
-							}
-							multiCommandList.get(depth.get(level)).put(new Command(temp));
-							command = temp;
-							temp = "";
-							break;
-						case '[':
-//							break;
-						case ']':
-//							break;
-						default:
-							temp += y;
-							break;
-					}
-				}
-			}
-			multiCommandList.get(startDepth).get(commandDepth.get(level))
-					.addArg(stringBuilderList.get(startDepth).append(temp).toString());
-			parsed = true;
-		}
-		return multiCommandList.get(startDepth).run(startDepth);
-	}
-
+	
 	/**
 	 * Decides where to send the command
 	 *
@@ -299,9 +251,8 @@ public class CommandParser{
 	 * it is goto.
 	 * @see #doCommand(String, int)
 	 * @see #doCommand(Command, int, boolean)
-	 * @see #doCommand(String, String, int, boolean)
 	 */
-	public static int doCommand(String cmd, String[] args, int startDepth, boolean debug){
+	public static ReturnInfo doCommand(String cmd, String[] args, int startDepth, boolean debug){
 		if(cmd.startsWith("!")){ return header(cmd, args); }
 		if(debug){ return debug(cmd, args, startDepth); }
 		return parseInput(cmd, args, startDepth);
@@ -317,10 +268,9 @@ public class CommandParser{
 	 * @return See the return value of
 	 * {@link #doCommand(String, String[], int, boolean)}
 	 * @see #doCommand(Command, int, boolean)
-	 * @see #doCommand(String, String, int, boolean)
 	 * @see #doCommand(String, String[], int, boolean)
 	 */
-	public static int doCommand(String cmd, int startDepth){
+	public static ReturnInfo doCommand(String cmd, int startDepth){
 		if(cmd.startsWith("\u0005")){ return getOut(cmd, startDepth); }
 		return parseInput(cmd, null, startDepth);
 	}
@@ -351,14 +301,14 @@ public class CommandParser{
 		return args;
 	}
 
-	private static int getOut(String code, int startDepth){
+	private static ReturnInfo getOut(String code, int startDepth){
 		int intCode =
 				Integer.parseInt(code.substring(code.indexOf('\u0005') + 1, code.indexOf('\u0006')));
 		return getOut(intCode, startDepth);
 	}
 
-	private static int getOut(int code, int startDepth){
-		return multiCommandList.get(code).run(startDepth);
+	private static ReturnInfo getOut(int code, int startDepth){
+		return commandList.get(code).run(startDepth);
 	}
 
 	/**
@@ -369,7 +319,7 @@ public class CommandParser{
 	 * @return The same thing {@link #doCommand(String, String[], int, boolean)}
 	 * returns
 	 */
-	private static int header(String cmd, String[] args){
+	private static ReturnInfo header(String cmd, String[] args){
 		try{
 			switch(cmd){
 				case "!import":
@@ -395,10 +345,9 @@ public class CommandParser{
 					// consoleOutput.add("OI! invalid ! command!"+r);
 			}
 		} catch(Exception e){
-			consoleOutput.add("ERROR WITH HEADER COMMAND");
-			return -2;
+			return new ReturnInfo(-2, "ERROR WITH HEADER COMMAND");
 		}
-		return -1;
+		return new ReturnInfo(-1);
 	}
 
 	/**
@@ -411,33 +360,33 @@ public class CommandParser{
 	 * {@link #doCommand(String, String[], int, boolean)}
 	 */
 
-	private static int debug(String cmd, String[] args, int startDepth){
+	private static ReturnInfo debug(String cmd, String[] args, int startDepth){
 		switch(cmd){
 			case "/debug.help":
 				consoleOutput.clear();
 				consoleOutput
-						.add("\u0001COMMAND LIST:"
-								+ r
-								+ "/ping     PONG!"
-								+ r
-								+ "/pong    PING!"
-								+ r
-								+ "/clear     Clears the screen"
-								+ r
-								+ "/linebreak     Adds a carriage return"
-								+ r
-								+ "/echo:[String]     Writes a string to the console"
-								+ r
-								+ "/gettime:[date String]    Outputs the date/time"
-								+ r
-								+ "/random:[Integer]     Outputs a random number up to the value specified"
-								+ r
-								+ "/loop:[Integer],([Command])     Loops a command a set number of times"
-								+ r
-								+ "/if:[Integer][<,>,=,<=,>=][Integer],([True Command]),([False Command])      Checks if a statement is true and, if so, runs a command"
-								+ r
-								+ "/for:[Integer],[Integer],[Integer],([Command])    Loops a command for a set number of times in certain increments"
-								+ r);
+				.add("\u0001COMMAND LIST:"
+						+ r
+						+ "/ping     PONG!"
+						+ r
+						+ "/pong    PING!"
+						+ r
+						+ "/clear     Clears the screen"
+						+ r
+						+ "/linebreak     Adds a carriage return"
+						+ r
+						+ "/echo:[String]     Writes a string to the console"
+						+ r
+						+ "/gettime:[date String]    Outputs the date/time"
+						+ r
+						+ "/random:[Integer]     Outputs a random number up to the value specified"
+						+ r
+						+ "/loop:[Integer],([Command])     Loops a command a set number of times"
+						+ r
+						+ "/if:[Integer][<,>,=,<=,>=][Integer],([True Command]),([False Command])      Checks if a statement is true and, if so, runs a command"
+						+ r
+						+ "/for:[Integer],[Integer],[Integer],([Command])    Loops a command for a set number of times in certain increments"
+						+ r);
 				break;
 			case "/debug.headerHelp":
 				consoleOutput.add("Available commands:\n" + "!import:[key1],[key2],[key3]...\n"
@@ -457,57 +406,16 @@ public class CommandParser{
 					consoleOutput.add("OI! There is an error with your get close command!");
 				}
 				break;
-			case "/debug.getVar":
-				try{
-					String name = args[0];
-					if(stringList.get(name) == null){
-						if(booleanList.get(name) == null){
-							if(intList.get(name) == null){
-								consoleOutput.add("There is no variable in memory by that name!");
-							} else {
-								consoleOutput.add(intList.get(name) + "");
-							}
-						} else {
-							consoleOutput.add(booleanList.get(name) + "");
-						}
-					} else {
-						consoleOutput.add(stringList.get(name) + "");
-					}
-				} catch(Exception p){
-					consoleOutput.add("OI! There is an error with your get variable command!");
-				}
-				break;
 			case "/debug.clearVar":
 				try{
 					String name = args[0];
-					if(stringList.remove(name) == null && booleanList.remove(name) == null
-							&& intList.remove(name) == null){
+					if(varList.remove(name) == null){
 						consoleOutput.add("There is no variable in memory by that name!");
 					} else {
 						consoleOutput.add("Variable " + name + " removed from memory!");
 					}
 				} catch(Exception p){
 					consoleOutput.add("OI! There is an error with your clear variable command!");
-				}
-				break;
-			case "/debug.varType":
-				try{
-					String name = args[0];
-					if(stringList.get(name) == null){
-						if(booleanList.get(name) == null){
-							if(intList.get(name) == null){
-								consoleOutput.add("There is no variable in memory by that name!");
-							} else {
-								consoleOutput.add("Variable is an Integer");
-							}
-						} else {
-							consoleOutput.add("Variable is a Boolean");
-						}
-					} else {
-						consoleOutput.add("Variable is a String");
-					}
-				} catch(Exception e){
-					consoleOutput.add("OI! There is an error with your variable type command!");
 				}
 				break;
 			case "/debug.listModules":
@@ -524,7 +432,7 @@ public class CommandParser{
 			default:
 				return parseInput(cmd, args, startDepth);
 		}
-		return -1;
+		return new ReturnInfo(-1);
 	}
 
 	/**
@@ -536,7 +444,7 @@ public class CommandParser{
 	 * @return See the return value of
 	 * {@link #doCommand(String, String[], int, boolean)}
 	 */
-	private static int parseInput(String cmd, String[] args, int startDepth){
+	private static ReturnInfo parseInput(String cmd, String[] args, int startDepth){
 		switch(cmd){
 			case "/ping":
 				consoleOutput.add("PONG!");
@@ -554,7 +462,7 @@ public class CommandParser{
 			default:
 				return parseAdvanceCommand(cmd, args, startDepth);
 		}
-		return -1;
+		return new ReturnInfo(-1);
 	}
 
 	/**
@@ -567,7 +475,7 @@ public class CommandParser{
 	 * error, '-3' if there is no command by name, and a value 0 or greater if
 	 * it is goto.
 	 */
-	private static int parseAdvanceCommand(String cmd, String[] args, int startDepth){
+	private static ReturnInfo parseAdvanceCommand(String cmd, String[] args, int startDepth){
 		try{
 			switch(cmd){
 				case "/echo":
@@ -585,8 +493,7 @@ public class CommandParser{
 						Random random = new Random();
 						consoleOutput.add(random.nextInt(var) + "");
 					} catch(Exception p){
-						consoleOutput.add("OI! That's not a integer! Try inputting a integer!");
-						return -2;
+						return new ReturnInfo(-2, "OI! That's not a integer! Try inputting a integer!");
 					}
 					break;
 				case "/loop":
@@ -596,12 +503,11 @@ public class CommandParser{
 						String command = args[1];
 						while(var1 != 0){
 							var1--;
-							int y = doCommand(command, startDepth);
-							if(y != -1){ return y; }
+							ReturnInfo y = doCommand(command, startDepth);
+							if(y.getRetCode() != -1){ return y; }
 						}
 					} catch(Exception p){
-						consoleOutput.add("OI! There is an error with your loop statement!");
-						return -2;
+						return new ReturnInfo(-2, "OI! There is an error with your loop statement!");
 					}
 					break;
 				case "/for":
@@ -611,15 +517,14 @@ public class CommandParser{
 						int var3 = Integer.parseInt(args[2]);
 						String command = args[3];
 						for(int var1 = Integer.parseInt(args[0]); var1 < var2; var1 += var3){
-							int y = doCommand(command, startDepth);
-							if(y != -1){ return y; }
+							ReturnInfo y = doCommand(command, startDepth);
+							if(y.getRetCode() != -1){ return y; }
 						}
 					} catch(Exception p){
-						consoleOutput.add("OI! There is an error with your for statement!");
-						return -2;
+						return new ReturnInfo(-2, "OI! There is an error with your for statement!");
 					}
 					break;
-				case "/String":
+				case "/var":
 					try{
 						args = parseArgs(args, 0, 2, startDepth, consoleOutput);
 						String name = args[0];
@@ -629,60 +534,12 @@ public class CommandParser{
 							verbose = Boolean.parseBoolean(args[2]);
 						}
 
-						booleanList.remove(name);
-						intList.remove(name);
-						stringList.put(name, string);
+						varList.put(name, string);
 						if(verbose){
-							consoleOutput.add("String " + name + " set to " + string);
+							consoleOutput.add("Variable " + name + " set to " + string);
 						}
 					} catch(Exception p){
-						consoleOutput
-								.add("OI! There is an error with your String declaration statement!");
-						return -2;
-					}
-					break;
-				case "/Int":
-					try{
-						args = parseArgs(args, 0, 2, startDepth, consoleOutput);
-						Boolean verbose = false;
-						if(args.length > 2){
-							verbose = Boolean.parseBoolean(args[2]);
-						}
-						String name = args[0];
-						int integer = Integer.parseInt(args[1]);
-
-						booleanList.remove(name);
-						stringList.remove(name);
-						intList.put(name, integer);
-						if(verbose){
-							consoleOutput.add("Integer " + name + " set to " + integer);
-						}
-					} catch(Exception p){
-						consoleOutput
-								.add("OI! There is an error with your Integer declaration statement!");
-						return -2;
-					}
-					break;
-				case "/Boolean":
-					try{
-						args = parseArgs(args, 0, 2, startDepth, consoleOutput);
-						Boolean verbose = false;
-						if(args.length > 2){
-							verbose = Boolean.parseBoolean(args[2]);
-						}
-						String name = args[0];
-						boolean b = Boolean.parseBoolean(args[1]);
-
-						stringList.remove(name);
-						intList.remove(name);
-						booleanList.put(name, b);
-						if(verbose){
-							consoleOutput.add("Boolean " + name + " set to " + b);
-						}
-					} catch(Exception p){
-						consoleOutput
-								.add("OI! There is an error with your Boolean declaration statement!");
-						return -2;
+						return new ReturnInfo(-2, "OI! There is an error with your variable declaration statement!");
 					}
 					break;
 				case "/getTime":
@@ -692,9 +549,7 @@ public class CommandParser{
 						Date dateObj = new Date();
 						consoleOutput.add(df.format(dateObj));
 					} catch(Exception p){
-						consoleOutput
-								.add("OI! That's not a proper date String! Try inputting a date String!");
-						return -2;
+						return new ReturnInfo(-2, "OI! That's not a proper date String! Try inputting a date String!");
 					}
 					break;
 				case "/if":
@@ -740,12 +595,10 @@ public class CommandParser{
 								if(var1 >= var2){ return doCommand(trueCommand, startDepth); }
 								return doCommand(falseCommand, startDepth);
 							default:
-								consoleOutput.add("OI! Invalid Operator for your if statement!");
-								return -2;
+								return new ReturnInfo(-2, "OI! Invalid Operator for your if statement!");
 						}
 					} catch(Exception p){
-						consoleOutput.add("OI! There is an error with your if statement!");
-						return -2;
+						return new ReturnInfo(-2, "OI! There is an error with your if statement!");
 					}
 				case "\u0002":
 					break;
@@ -754,13 +607,11 @@ public class CommandParser{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
 						int x = Integer.parseInt(args[0]);
 						if(x < 0){
-							consoleOutput.add("OI! There is no such thing as a negative line!");
-							return -2;
+							return new ReturnInfo(-2, "OI! There is no such thing as a negative line!");
 						}
-						return x - 1;
+						return new ReturnInfo(x - 1);
 					} catch(Exception e){
-						consoleOutput.add("OI! Not a valid integer");
-						return -2;
+						return new ReturnInfo(-2, "OI! Not a valid integer");
 					}
 				case "/last":
 					try{
@@ -774,8 +625,7 @@ public class CommandParser{
 							x--;
 						}
 					} catch(Exception e){
-						consoleOutput.add("OI! Not a valid integer");
-						return -2;
+						return new ReturnInfo(-2, "OI! Not a valid integer");
 					}
 					break;
 				case "/flush":
@@ -784,8 +634,7 @@ public class CommandParser{
 						boolean b = Boolean.parseBoolean(args[0]);
 						flush(b);
 					} catch(Exception e){
-						consoleOutput.add("OI! Not a valid boolean");
-						return -2;
+						return new ReturnInfo(-2, "OI! Not a valid boolean");
 					}
 					break;
 				case "/sleep":
@@ -793,11 +642,9 @@ public class CommandParser{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
 						Thread.sleep(Integer.parseInt(args[0]));
 					} catch(InterruptedException e){
-						consoleOutput.add("OI! I just don't know went wrong");
-						return -2;
+						return new ReturnInfo(-2, "OI! I just don't know went wrong");
 					} catch(NumberFormatException e){
-						consoleOutput.add("OI! Not a valid Integer");
-						return -2;
+						return new ReturnInfo(-2, "OI! Not a valid Integer");
 					}
 					break;
 				default:
@@ -805,10 +652,92 @@ public class CommandParser{
 
 			}
 		} catch(ArrayIndexOutOfBoundsException e){
-			consoleOutput.add("OI! A command didn't have the right number of arguments!");
 			e.printStackTrace();
-			return -2;
+			return new ReturnInfo(-2, "OI! A command didn't have the right number of arguments!");
 		}
-		return -1;
+		return new ReturnInfo(-1);
+	}
+
+	/**
+	 * A class that stores the info for returning stuff 
+	 * @author Coolway99
+	 */
+	public static class ReturnInfo{
+		private final int retCode;
+		private final ArrayList<String> additionalData;
+
+		/**
+		 * The most basic constructor for the class
+		 * @param retCode The code to return, see {@link CommandParser#doCommand(String, String[], int, boolean)}
+		 * @see ReturnInfo#ReturnInfo(int, ArrayList)
+		 * @see ReturnInfo#ReturnInfo(int, String...)
+		 */
+		public ReturnInfo(int retCode){
+			this.retCode = retCode;
+			this.additionalData = new ArrayList<>();
+		}
+
+		/**
+		 * Sets the additional data to what is specified
+		 * @param retCode See {@link ReturnInfo#ReturnInfo(int)}
+		 * @param additionalData The additional data to attach to the return code
+		 * @see ReturnInfo#ReturnInfo(int)
+		 * @see ReturnInfo#ReturnInfo(int, String...)
+		 */
+		public ReturnInfo(int retCode, ArrayList<String> additionalData){
+			this.retCode = retCode;
+			this.additionalData = additionalData;
+		}
+
+		/**
+		 * Same as the other two, except a variable number of strings
+		 * @param retCode The return code
+		 * @param additionalData The additional data
+		 * @see ReturnInfo#ReturnInfo(int)
+		 * @see ReturnInfo#ReturnInfo(int, ArrayList)
+		 */
+		public ReturnInfo(int retCode, String... additionalData){
+			this.retCode = retCode;
+			ArrayList<String> addData = new ArrayList<>();
+			for(String x : additionalData){
+				addData.add(x);
+			}
+			this.additionalData = addData;
+		}
+
+		/**
+		 * Adds data to the end of the array for additionalData
+		 * @param data The data to be added
+		 */
+		public void addAdditionalData(String... data){
+			for(String x : data){
+				this.additionalData.add(x);
+			}
+		}
+
+		/**
+		 * Removes data at the specified index
+		 * @param index The data to be removed
+		 */
+		public void removeAdditionalData(int index){
+			this.additionalData.remove(index);
+		}
+
+		/**
+		 * Gets the additional data
+		 * @return The ArrayList of additional data
+		 */
+		public ArrayList<String> getAdditionalData(){
+			return this.additionalData;
+		}
+
+		/**
+		 * Gets the return code: The code returned, usually the standard but parser uses it differently;
+		 * for the offset in the parsing array.
+		 * @return The return code
+		 */
+		public int getRetCode(){
+			return this.retCode;
+		}
 	}
 }

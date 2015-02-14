@@ -17,6 +17,7 @@ import java.util.jar.JarFile;
 
 import javax.swing.JOptionPane;
 
+import jlime.pc.edition.CommandParser.ReturnInfo;
 import jlime.pc.edition.ModuleManager.Module.HelpType;
 
 /**
@@ -238,19 +239,18 @@ public class ModuleManager{
 	 * console output adds to this
 	 * @return The code returned by the modules provided it's not -3
 	 */
-	public static int run(ArrayList<String> modules, String cmd, String[] args, int startDepth,
+	public static ReturnInfo run(ArrayList<String> modules, String cmd, String[] args, int startDepth,
 			ArrayList<String> consoleOutput){
 		try{
 			for(String key : modules){
 				Method method = methodList.get(key);
-				int y = (int) method.invoke(null, cmd, args, startDepth, consoleOutput);
-				if(y != -3){ return y; }
+				ReturnInfo y = (ReturnInfo) method.invoke(null, cmd, args, startDepth, consoleOutput);
+				if(y.getRetCode() != -3){ return y; }
 			}
 		} catch(Exception e){
-			return -2;
+			return new ReturnInfo(-2);
 		}
-		consoleOutput.add("OI! Command not valid!\n");
-		return -2;
+		return new ReturnInfo(-2, "OI! Command not valid!\n");
 	}
 	
 	/**
