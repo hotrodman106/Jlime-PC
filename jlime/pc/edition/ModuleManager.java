@@ -221,7 +221,7 @@ public class ModuleManager{
 		} catch(Exception e){
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Warning, module file " + file.getName()
-					+ " errored when loading"
+					+ " threw an error when loading"
 					+ "\nPlease tell the module author about this problem", "Module Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
