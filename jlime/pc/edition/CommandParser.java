@@ -223,7 +223,7 @@ public class CommandParser{
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Expands the command given to it and runs
 	 *
@@ -238,7 +238,7 @@ public class CommandParser{
 	public static ReturnInfo doCommand(Command c, int startDepth, boolean debug){
 		return doCommand(c.getCmd(), c.getArgs(), startDepth, debug);
 	}
-	
+
 	/**
 	 * Decides where to send the command
 	 *
@@ -271,7 +271,10 @@ public class CommandParser{
 	 * @see #doCommand(String, String[], int, boolean)
 	 */
 	public static ReturnInfo doCommand(String cmd, int startDepth){
-		if(cmd.startsWith("\u0005")){ return getOut(cmd, startDepth); }
+		if(cmd.contains("\u0005")){
+				int code = Integer.parseInt(cmd.substring(cmd.indexOf('\u0005')+1, cmd.indexOf('\u0006')));
+				return commandList.get(code).run(startDepth);
+		}
 		return parseInput(cmd, null, startDepth);
 	}
 
@@ -299,16 +302,6 @@ public class CommandParser{
 			System.out.println(x);
 		}
 		return args;
-	}
-
-	private static ReturnInfo getOut(String code, int startDepth){
-		int intCode =
-				Integer.parseInt(code.substring(code.indexOf('\u0005') + 1, code.indexOf('\u0006')));
-		return getOut(intCode, startDepth);
-	}
-
-	private static ReturnInfo getOut(int code, int startDepth){
-		return commandList.get(code).run(startDepth);
 	}
 
 	/**
