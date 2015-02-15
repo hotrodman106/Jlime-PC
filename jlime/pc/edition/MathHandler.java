@@ -151,7 +151,7 @@ public class MathHandler{
 			simplify(stack);
 			var2 = stack.pop();
 		}
-		double num1 = Double.parseDouble(var1), num2 = Double.parseDouble(var2);
+		double num1 = Double.parseDouble(var2), num2 = Double.parseDouble(var1);
 		switch(opperand){
 			case "+":
 				stack.push(""+(num1 + num2));
