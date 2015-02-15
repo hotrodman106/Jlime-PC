@@ -56,12 +56,12 @@ public class CommandParser{
 	}
 
 	/**
-	 * Replaces a variable in the users script with its value.
+	 * Gets the value of a variable.
 	 *
 	 * @param key Name of variable ( EX: the x in %x% ).
 	 * @return Returns the value of the variable.
 	 */
-	private static String getVar(String key){
+	public static String getVar(String key){
 		return varList.get(key);
 	}
 
@@ -146,7 +146,7 @@ public class CommandParser{
 						inVar = false;
 						String var = getVar(temp.toString());
 						if(var != null){
-							ret.append(temp);
+							ret.append(var);
 							temp.setLength(0);
 						} else {
 							return new ReturnInfo(-2, "Oi! That was not a valid variable!", "Name: " + temp, "At position "+(x+1));
@@ -740,5 +740,29 @@ public class CommandParser{
 		public int getRetCode(){
 			return this.retCode;
 		}
+	}
+	
+	/**
+	 * Method used to convert from string to int. In here to provide change-independent way
+	 * for covering to int. The method first converts it to double then rounds it. Afterwards it
+	 * casts it to int.
+	 * 
+	 * @param string The string representing an integer (ex. "2")
+	 * @return The integer represented by the string (ex. 2)
+	 * @see CommandParser#parseDouble(String)
+	 */
+	public static int parseInt(String string){
+		return (int) Math.round(Double.parseDouble(string));
+	}
+	
+	/**
+	 * Method used to convert from string to double. Used for so that if I break compatibility
+	 * with that all modules don't have to re-update
+	 * 
+	 * @param string The string to turn into a double
+	 * @return The double represented by the string
+	 */
+	public static double parseDouble(String string){
+		return Double.parseDouble(string);
 	}
 }
