@@ -18,7 +18,6 @@ public class Command{
 	 * @param cmd The command
 	 */
 	public Command(String cmd){
-		System.out.println("Created command object, CMD+" + cmd);
 		this.cmd = cmd;
 		this.args = new ArrayList<>();
 	}
@@ -30,7 +29,6 @@ public class Command{
 	 * @param args Starting arguments for the command
 	 */
 	public Command(String cmd, String[] args){
-		System.out.println("Created command object, CMD+" + cmd);
 		this.cmd = cmd;
 		this.args = new ArrayList<>();
 		for(String s : args){
@@ -45,7 +43,6 @@ public class Command{
 	 * @param args Starting arguments for the command
 	 */
 	public Command(String cmd, ArrayList<String> args){
-		System.out.println("Created command object, CMD+" + cmd);
 		this.cmd = cmd;
 		this.args = args;
 	}
@@ -103,7 +100,6 @@ public class Command{
 	 * @return A String representing the command
 	 */
 	public String toString(){
-		System.out.println(this.cmd);
 		StringBuilder temp = new StringBuilder(this.cmd);
 		if(this.args != null){
 			temp.append(":");

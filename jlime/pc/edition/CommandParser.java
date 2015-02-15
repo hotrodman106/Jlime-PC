@@ -299,15 +299,12 @@ public class CommandParser{
 	 */
 	public static String[] parseArgs(String[] args, int offset, int length, int startDepth,
 			ArrayList<String> consoleOutput){
-		System.out.println(offset);
-		System.out.println(length);
 		for(int x = offset; x < length; x++){
 			if(args[x].contains("\u0005")){
 				CommandParser.doCommand(args[x], startDepth);
 				args[x] = consoleOutput.remove(consoleOutput.size() - 1);
 			}
 			args[x] = args[x].trim();
-			System.out.println(x);
 		}
 		return args;
 	}
@@ -329,12 +326,10 @@ public class CommandParser{
 					}
 					break;
 				case "!foreground":
-					ConsoleProxy.setForeground(new Color(Integer.parseInt(args[0]), Integer
-							.parseInt(args[1]), Integer.parseInt(args[2])));
+					ConsoleProxy.setForeground(new Color(parseInt(args[0]), parseInt(args[1]), parseInt(args[2])));
 					break;
 				case "!background":
-					ConsoleProxy.setBackground(new Color(Integer.parseInt(args[0]), Integer
-							.parseInt(args[1]), Integer.parseInt(args[2])));
+					ConsoleProxy.setBackground(new Color(parseInt(args[0]), parseInt(args[1]), parseInt(args[2])));
 					break;
 				case "!resetColors":
 					ConsoleProxy.resetColors();
@@ -402,7 +397,7 @@ public class CommandParser{
 			case "/debug.close":
 				try{
 					args = parseArgs(args, 0, args.length, startDepth, consoleOutput);
-					System.exit(Integer.parseInt(args[0]));
+					System.exit(parseInt(args[0]));
 				} catch(Exception q){
 					consoleOutput.add("OI! There is an error with your get close command!");
 				}
@@ -490,7 +485,7 @@ public class CommandParser{
 				case "/random":
 					try{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
-						int var = Integer.parseInt(args[0]);
+						int var = parseInt(args[0]);
 						Random random = new Random();
 						consoleOutput.add(random.nextInt(var) + "");
 					} catch(Exception p){
@@ -500,7 +495,7 @@ public class CommandParser{
 				case "/loop":
 					try{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
-						int var1 = Integer.parseInt(args[0]);
+						int var1 = parseInt(args[0]);
 						String command = args[1];
 						while(var1 != 0){
 							var1--;
@@ -514,10 +509,10 @@ public class CommandParser{
 				case "/for":
 					try{
 						args = parseArgs(args, 0, 3, startDepth, consoleOutput);
-						int var2 = Integer.parseInt(args[1]);
-						int var3 = Integer.parseInt(args[2]);
+						int var2 = parseInt(args[1]);
+						int var3 = parseInt(args[2]);
 						String command = args[3];
-						for(int var1 = Integer.parseInt(args[0]); var1 < var2; var1 += var3){
+						for(int var1 = parseInt(args[0]); var1 < var2; var1 += var3){
 							ReturnInfo y = doCommand(command, startDepth);
 							if(y.getRetCode() != -1){ return y; }
 						}
@@ -565,8 +560,8 @@ public class CommandParser{
 
 						String[] num = args[0].split("[<=>]+");
 						String operator = args[0].split("\\d+")[1];
-						int var1 = Integer.parseInt(num[0]);
-						int var2 = Integer.parseInt(num[1]);
+						int var1 = parseInt(num[0]);
+						int var2 = parseInt(num[1]);
 						String trueCommand = args[1];
 						String falseCommand;
 						try{
@@ -606,7 +601,7 @@ public class CommandParser{
 				case "/goto":
 					try{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
-						int x = Integer.parseInt(args[0]);
+						int x = parseInt(args[0]);
 						if(x < 0){
 							return new ReturnInfo(-2, "OI! There is no such thing as a negative line!");
 						}
@@ -620,7 +615,7 @@ public class CommandParser{
 							doCommand(args[0], startDepth);
 							args[0] = consoleOutput.remove(consoleOutput.size() - 1);
 						}
-						int x = Integer.parseInt(args[0]) - 1;
+						int x = parseInt(args[0]) - 1;
 						while(x > 0){
 							consoleOutput.remove(consoleOutput.size() - 1);
 							x--;
@@ -641,7 +636,7 @@ public class CommandParser{
 				case "/sleep":
 					try{
 						args = parseArgs(args, 0, 1, startDepth, consoleOutput);
-						Thread.sleep(Integer.parseInt(args[0]));
+						Thread.sleep(parseInt(args[0]));
 					} catch(InterruptedException e){
 						return new ReturnInfo(-2, "OI! I just don't know went wrong");
 					} catch(NumberFormatException e){
