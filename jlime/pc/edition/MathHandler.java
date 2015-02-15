@@ -8,40 +8,9 @@ import jlime.pc.edition.CommandParser.ReturnInfo;
 /**
  * The class that handles math statements and commands. Statements are expressed
  * within []. Future plans are to add API support for modules to add their own
- * operators. Will return the type given (if it has decimals, then will return a
- * double, else return an integer), but can be forced into either type by
- * prefixing it with &#64;d or &#64;i for decimal or integer respectively. The
- * current supported operators are as follows:
-<table border="1" style="width:100%">
-	<tr>
-		<th>Operators</th>
-		<th>Function</th>
-	</tr>
-	<tr>
-		<td>+</td>
-		<td>Adds two numbers together.</td>
-	</tr>
-	<tr>
-		<td>-</td>
-		<td>Subtracts two numbers together</td>
-	</tr>
-	<tr>
-		<td>/</td>
-		<td>divides the first number from the second number</td>
-	</tr>
-	<tr>
-		<td>*</td>
-		<td>Multiplies two numbers together</td>
-	</tr>
-	<tr>
-		<td>%</td>
-		<td>Takes the remainder of the division</td>
-	</tr>
-</table>
+ * operators.
  *
- *Additionally, anything starting with # is considered a command. Like before can be prefixed
- *with &#64;d or &#64;i to to force it into decimal or integer, else it will return what it was given.
- *For example, you could do &#64;d#
+ * In the future, anything starting with # is considered a command.
  * @author Coolway99
  */
 public class MathHandler{
