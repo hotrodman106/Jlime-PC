@@ -1,5 +1,6 @@
 package jlime.pc.edition;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import jlime.pc.edition.CommandParser.ReturnInfo;
@@ -45,11 +46,30 @@ import jlime.pc.edition.CommandParser.ReturnInfo;
  */
 public class MathHandler{
 
-	private static final String[][] priorityList = {
-		{"^"},
-		{"*","/","%"},
-		{"+","-"}
-	};
+	private static final ArrayList<ArrayList<Character>> priorityList = new ArrayList<>();
+
+	/**
+	 * The initialization statement, must be called upon program boot up
+	 */
+	public static void init(){
+		//Exponential
+		priorityList.add(new ArrayList<Character>());
+		priorityList.get(0).add('^');
+		//Multiplicative
+		priorityList.add(new ArrayList<Character>());
+		priorityList.get(1).add('*');
+		priorityList.get(1).add('/');
+		//Additive
+		priorityList.add(new ArrayList<Character>());
+		priorityList.get(2).add('+');
+		priorityList.get(2).add('-');
+		//Bitwise
+		priorityList.add(new ArrayList<Character>());
+		priorityList.get(3).add('&');
+		priorityList.get(3).add('|');
+		priorityList.get(3).add('~');
+	}
+
 	/**
 	 * The input statement. It will evaluate the expression and output whatever outputs to the
 	 * consoleOutput ArrayList
