@@ -559,7 +559,7 @@ public class CommandParser{
 						} catch(Exception e){}
 
 						String[] num = args[0].split("[<=>]+");
-						String operator = args[0].split("\\d+")[1];
+						String operator = args[0].split("[\\d\\.]+")[1];
 						int var1 = parseInt(num[0]);
 						int var2 = parseInt(num[1]);
 						String trueCommand = args[1];
