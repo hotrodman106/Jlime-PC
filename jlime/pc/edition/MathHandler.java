@@ -1,6 +1,8 @@
 package jlime.pc.edition;
 
-import java.util.ArrayList;
+import java.util.Stack;
+
+import jlime.pc.edition.CommandParser.ReturnInfo;
 
 /**
  * The class that handles math statements and commands. Statements are expressed
@@ -42,42 +44,127 @@ import java.util.ArrayList;
  * @author Coolway99
  */
 public class MathHandler{
+
+	private static final String[][] priorityList = {
+		{"^"},
+		{"*","/","%"},
+		{"+","-"}
+	};
 	/**
 	 * The input statement. It will evaluate the expression and output whatever outputs to the
 	 * consoleOutput ArrayList
 	 * 
 	 * @param input The math expression being inputed, without the []
-	 * @param consoleOutput The console output array that will put outputed too.
 	 * @return See the return values of {@link CommandParser#doCommand(String, String[], int, boolean)}
 	 */
-	public static int inputMath(String input, ArrayList<String> consoleOutput){
-		try{
-			if(input.equals("")){
-				throw new NullPointerException();
-			}
-		} catch(NullPointerException e){
-			consoleOutput.add("Error: There was nothing to input");
-			return -2;
+	public static ReturnInfo inputMath(String input){
+		if(input.equals("")){
+			return new ReturnInfo(-2, "Error: There was nothing to input for your math!");
 		}
-		return -1;
+		return new ReturnInfo(-1, parser(input));
 	}
-	private static String parser(char[] chars, int offset){
-		StringBuilder temp = new StringBuilder();
+
+	private static boolean equalsOperator(String line){
+		return line.matches("\\*|\\+|\\-|\\/|\\(|\\)");
+	}
+
+	private static String parser(String in){
+		Stack<Character> opStack = new Stack<>();
+		Stack<String> stack = new Stack<>();
+		char[] chars = in.toCharArray();
 		for(int x = 0; x < chars.length; x++){
 			char y = chars[x];
-			switch(x){
-				case '(':{
-					String[] in = parser(chars, x).split("\u0000");
-					x = Integer.parseInt(in[0]);
-					temp.append(in[1]);
-					break;
+			if(equalsOperator(y+"")){
+				if(opStack.isEmpty()){
+					opStack.push(y);
+					continue;
 				}
-				case ')':
-					return x+"\u0000"+temp.toString();
-				default:
+				if(opStack.peek() == '('){
+					opStack.push(y);
+					continue;
+				}
+				char z = opStack.peek();
+				switch(y){
+					case '(':
+						opStack.push(y);
+						break;
+					case ')':
+						opStack.pop();
+						while(z != '('){
+							stack.push(z+"");
+							z = opStack.pop();
+							if(opStack.isEmpty()){
+								break;
+							}
+						}
+						break;
+					case '-':
+					case '+':
+						stack.push(opStack.pop()+"");
+						opStack.push(y);
+						break;
+					case '*':
+					case '/':
+						if(z == '*' || z == '/'){
+							stack.push(opStack.pop()+"");
+						}
+						opStack.push(y);
+						break;
+				}
+			} else {
+				StringBuilder temp = new StringBuilder();
+				do{
 					temp.append(y);
+					try{
+						y = chars[++x];
+					} catch(ArrayIndexOutOfBoundsException e){
+						break;
+					}
+				} while(!equalsOperator(y+""));
+				x--;
+				stack.push(temp.toString());
 			}
 		}
-		return null;
+		if(!opStack.isEmpty()){
+			while(!opStack.isEmpty()){
+				stack.push(opStack.pop()+"");
+			}
+		}
+		System.out.println(stack.toString());
+		simplify(stack);
+		return stack.pop();
+	}
+
+	private static void simplify(Stack<String> stack){
+		String opperand = stack.pop();
+		String var1 = stack.pop();
+		String var2 = stack.pop();
+		if(equalsOperator(var1)){
+			stack.push(var2);
+			stack.push(var1);
+			simplify(stack);
+			var1 = stack.pop();
+			var2 = stack.pop();
+		}
+		if(equalsOperator(var2)){
+			stack.push(var2);
+			simplify(stack);
+			var2 = stack.pop();
+		}
+		double num1 = Double.parseDouble(var1), num2 = Double.parseDouble(var2);
+		switch(opperand){
+			case "+":
+				stack.push(""+(num1 + num2));
+				break;
+			case "-":
+				stack.push(""+(num1 - num2));
+				break;
+			case "*":
+				stack.push(""+(num1 * num2));
+				break;
+			case "/":
+				stack.push(""+(num1 / num2));
+				break;
+		}
 	}
 }

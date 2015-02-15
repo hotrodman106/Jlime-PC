@@ -160,6 +160,14 @@ public class CommandParser{
 				case '\\':
 					escaped = true;
 					break;
+				case '[':{
+					StringBuilder mathTemp = new StringBuilder();
+					while(chars[++x] != ']'){
+						mathTemp.append(chars[x]);
+					}
+					temp.append(MathHandler.inputMath(mathTemp.toString()).getAdditionalData().get(0));
+					break;
+				}
 				case '(':{
 					commandList.add(new MultiCommand(false));
 					ReturnInfo returned = parser(chars, ++x, commandList.size()-1);

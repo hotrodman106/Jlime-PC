@@ -24,13 +24,12 @@ public class MultiCommand{
 	}
 	
 	/**
-	 * Stores executed commands in memory until complete run or users calls
-	 * '/flush:true'.
+	 * Puts a new command into the 
 	 *
 	 * @param cmd Main part of command. ( EX: /flush: )
 	 * @param args All arguments following a command ( EX: true )
 	 */
-	public void put(String cmd, String[] args){
+	public void put(String cmd, String... args){
 		this.put(new Command(cmd, args));
 	}
 	
