@@ -2,6 +2,8 @@ package jlime.pc.edition;
 
 import java.util.ArrayList;
 
+import jlime.pc.edition.CommandParser.ReturnInfo;
+
 /**
  * Created by Coolway99 on 2015-01-07.
  *
@@ -22,13 +24,12 @@ public class MultiCommand{
 	}
 	
 	/**
-	 * Stores executed commands in memory until complete run or users calls
-	 * '/flush:true'.
+	 * Puts a new command into the 
 	 *
 	 * @param cmd Main part of command. ( EX: /flush: )
 	 * @param args All arguments following a command ( EX: true )
 	 */
-	public void put(String cmd, String[] args){
+	public void put(String cmd, String... args){
 		this.put(new Command(cmd, args));
 	}
 	
@@ -69,12 +70,12 @@ public class MultiCommand{
 	 * error, '-3' if there is no command by name, and a value 0 or greater if
 	 * it is goto.
 	 */
-	public int run(int level){
+	public ReturnInfo run(int level){
 		for(Command c : this.commands){
 			System.out.println(c);
-			int ret = CommandParser.doCommand(c, level, this.debug);
-			if(ret != -1){ return ret; }
+			ReturnInfo ret = CommandParser.doCommand(c, level, this.debug);
+			if(ret.getRetCode() != -1){ return ret; }
 		}
-		return -1;
+		return new ReturnInfo(-1);
 	}
 }

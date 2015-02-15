@@ -23,7 +23,8 @@ public class GUI_Splash extends JWindow {
 			 setLocationRelativeTo(null); 
 			 this.getContentPane().add(progress);
 			 setVisible(true); 
-			 Thread.sleep(4000); 
+			 Thread.sleep(4000);
+			 MathHandler.init();
 			 dispose();
 			 GUI.main(null);
 } catch(Exception exception) { 
