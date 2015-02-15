@@ -81,14 +81,18 @@ public class MathHandler{
 		if(input.equals("")){
 			return new ReturnInfo(-2, "Error: There was nothing to input for your math!");
 		}
-		return new ReturnInfo(-1, parser(input));
+		return parser(input);
 	}
 
 	private static boolean equalsOperator(String line){
-		return line.matches("\\*|\\+|\\-|\\/|\\(|\\)");
+		return line.matches("|\\(|\\)"
+				+ "\\*|\\/"
+				+ "|\\+|\\-"
+				+ "|\\||\\&|\\~"
+				/*|\\^|\\%"*/);
 	}
 
-	private static String parser(String in){
+	private static ReturnInfo parser(String in){
 		Stack<Character> opStack = new Stack<>();
 		Stack<String> stack = new Stack<>();
 		char[] chars = in.toCharArray();
@@ -118,29 +122,43 @@ public class MathHandler{
 							}
 						}
 						break;
-					case '-':
-					case '+':
-						stack.push(opStack.pop()+"");
-						opStack.push(y);
-						break;
-					case '*':
-					case '/':
-						if(z == '*' || z == '/'){
-							stack.push(opStack.pop()+"");
+					default:{
+						switch(getPriority(y, z)){
+							case -1:
+								/* If the incoming symbol has lower precedence than the symbol on 
+								 * the top of the stack, pop the stack and print the top operator. 
+								 * Then test the incoming operator against the new top of stack.*/
+								x--;
+								stack.push(opStack.pop()+"");
+								continue;
+							case 0:
+								stack.push(opStack.pop()+"");
+								opStack.push(y);
+								break;
+							case 1:
+								opStack.push(y);
+								break;
 						}
-						opStack.push(y);
 						break;
+					}
 				}
 			} else {
 				StringBuilder temp = new StringBuilder();
-				do{
-					temp.append(y);
-					try{
+				if(y == '%'){
+					do{
 						y = chars[++x];
-					} catch(ArrayIndexOutOfBoundsException e){
-						break;
-					}
-				} while(!equalsOperator(y+""));
+						temp.append(y);
+					} while(y != '%');
+					temp.setLength(temp.length()-1);
+					stack.push(CommandParser.getVar(temp.toString()));
+					continue;
+				}
+				try{
+					do{
+						temp.append(y);
+						y = chars[++x];
+					} while(!equalsOperator(y+""));
+				} catch(ArrayIndexOutOfBoundsException e){}
 				x--;
 				stack.push(temp.toString());
 			}
@@ -152,7 +170,7 @@ public class MathHandler{
 		}
 		System.out.println(stack.toString());
 		simplify(stack);
-		return stack.pop();
+		return new ReturnInfo(-1, stack.pop());
 	}
 
 	private static void simplify(Stack<String> stack){
@@ -185,6 +203,30 @@ public class MathHandler{
 			case "/":
 				stack.push(""+(num1 / num2));
 				break;
+			case "&":
+				stack.push(""+(Math.round(num1) & Math.round(num2)));
+				break;
+			case "|":
+				stack.push(""+(Math.round(num1) & Math.round(num2)));
+				break;
 		}
+	}
+
+	/**
+	 * @return -1 is below, 0 if equal, 1 if above
+	 */
+	private static int getPriority(char op, char lastOp){
+		for(ArrayList<Character> charList : priorityList){
+			if(charList.contains(op)){
+				if(charList.contains(lastOp)){
+					return 0;
+				}
+				return 1;
+			}
+			if(charList.contains(lastOp)){
+				return -1;
+			}
+		}
+		return 0;
 	}
 }
