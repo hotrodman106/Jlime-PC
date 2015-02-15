@@ -31,6 +31,7 @@ public class GUI extends javax.swing.JFrame {
            public static boolean useDebug;
 	public final GUI_Help help = new GUI_Help();
 	public static final GUI gui = new GUI();
+	public static CommandThread thread;
 	public static final double version = 6.0;
 	public static final String versionName = "Mojito";
 
@@ -130,6 +131,9 @@ public class GUI extends javax.swing.JFrame {
 
         jLabel1.setText("This is some filler");
 
+        threadStatusLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        threadStatusLabel.setText("Has not been started yet");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -137,7 +141,9 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 373, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
+                .addComponent(threadStatusLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(6, 6, 6))
         );
@@ -147,7 +153,8 @@ public class GUI extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel1)))
+                    .addComponent(jLabel1)
+                    .addComponent(threadStatusLabel)))
         );
 
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jlime/pc/edition/assets/images/file.png"))); // NOI18N
@@ -365,10 +372,10 @@ public class GUI extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponent
 
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
-        
+
     }//GEN-LAST:event_jMenu1ActionPerformed
 
     private void jMenu1MenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenu1MenuSelected
@@ -396,22 +403,30 @@ public class GUI extends javax.swing.JFrame {
             chooser.getSelectedFile().getName());
     }
 
- 
+
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private static void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        System.out.println(useDebug);
-        final String[] lines = jTextArea2.getText().toString().split("\n");
-        (new Thread(){
-        	@Override
-			public void run(){
-				CommandParser.inputCommand(lines, useDebug);
+    @SuppressWarnings("deprecation")
+	private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+		if(thread != null){
+			if(thread.isAlive()){
+				if(JOptionPane.showConfirmDialog(this, "Your program is still running, halt it's execution?",
+						"Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
+						== JOptionPane.OK_OPTION){
+					thread.stop();
+					System.out.println("Stopped");
+				} else {
+					return;
+				}
 			}
-		}).start();
+		}
+        final String[] lines = jTextArea2.getText().toString().split("\n");
+		thread = new CommandThread(lines, useDebug);
+		thread.start();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-showSaveAs();    
+showSaveAs();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private static void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
@@ -420,15 +435,15 @@ showSaveAs();
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         int n = JOptionPane.showConfirmDialog(this, "Are you sure you want to start new?", "Are you sure?", JOptionPane.YES_NO_OPTION);
-      
+
     if (n == JOptionPane.YES_OPTION) {
       jTextArea1.setText("");
       jTextArea2.setText("");
       lastFile = "";
       this.setTitle("JLime PC Editon");
-      
+
   }
-   
+
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private static void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
@@ -447,7 +462,7 @@ showSaveAs();
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
          jTextArea2.insert(result, jTextArea2.getCaretPosition());
-         
+
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private static void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
@@ -466,7 +481,7 @@ clpbrd.setContents (stringSelection, null);
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jTextArea2InputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextArea2InputMethodTextChanged
-        
+
     }//GEN-LAST:event_jTextArea2InputMethodTextChanged
 
     private void jTextArea2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextArea2PropertyChange
@@ -479,7 +494,7 @@ clpbrd.setContents (stringSelection, null);
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
        if(lastFile.equals("")){
-       showSaveAs();    
+       showSaveAs();
        }else{
            try {
                int n = JOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Are you sure?", JOptionPane.YES_NO_OPTION);
@@ -521,7 +536,7 @@ private void showSaveAs(){
                   FileManager.writeFile(chooser.getSelectedFile().toString() + ".jlime", jTextArea2.getText().toString());
                   lastFile = chooser.getSelectedFile().toString() + ".jlime";
                   this.setTitle(lastFile);
-                  
+
                         }
                 } catch (IOException ex) {
                    System.out.println("IOEXCEPTION");
@@ -530,7 +545,7 @@ private void showSaveAs(){
             chooser.getSelectedFile().getName());
     }
 }
-    
+
 private void updateLineCount(){
        int caretpos = jTextArea2.getCaretPosition();
        int row;
@@ -553,7 +568,7 @@ private void updateLineCount(){
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -603,5 +618,21 @@ private void updateLineCount(){
     private javax.swing.JScrollPane jScrollPane2;
     public static javax.swing.JTextArea jTextArea1;
     public static javax.swing.JTextArea jTextArea2;
+    public final javax.swing.JLabel threadStatusLabel = new javax.swing.JLabel();
     // End of variables declaration//GEN-END:variables
+}
+class CommandThread extends Thread{
+	private final String[] lines;
+	private final boolean useDebug;
+	public CommandThread(String[] lines, boolean useDebug){
+		this.lines = lines;
+		this.useDebug = useDebug;
+		this.setDaemon(true);
+	}
+	@Override
+	public void run(){
+		GUI.gui.threadStatusLabel.setText("Running");
+		CommandParser.inputCommand(lines, useDebug);
+		GUI.gui.threadStatusLabel.setText("Execution Completed");
+	}
 }
