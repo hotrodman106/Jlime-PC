@@ -40,6 +40,9 @@ public class GUI extends javax.swing.JFrame {
      */
     public GUI() {
         initComponents();
+		File modules = new File("Modules");
+		ModuleManager.init(modules);
+		MathHandler.init();
         jLabel2.setText("Version " + version + " " + versionName);
                try {
                    FileManager.readsettingsFile("settings.jlimesettings");
@@ -563,8 +566,6 @@ private void updateLineCount(){
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-    	File modules = new File("Modules");
-        ModuleManager.init(modules);
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

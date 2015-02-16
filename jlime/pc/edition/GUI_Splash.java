@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
+import javax.swing.UIManager;
 
 @SuppressWarnings("javadoc")
 public class GUI_Splash extends JWindow { 
@@ -21,14 +22,15 @@ public class GUI_Splash extends JWindow {
 			 setSize(480,530); 
 			 setBackground(new Color(0, 255, 0, 0));
 			 setLocationRelativeTo(null); 
-			 this.getContentPane().add(progress);
-			 setVisible(true); 
-			 Thread.sleep(4000);
-			 MathHandler.init();
-			 dispose();
-			 GUI.main(null);
+			 setVisible(true);
+			 Thread.sleep(2500);
+			 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            System.out.println("Preload complete");
+		    GUI.main(null); 
+		    dispose();
 } catch(Exception exception) { 
-	JOptionPane.showMessageDialog((java.awt.Component) null,"Error"+exception.getMessage(), "Error:", JOptionPane.DEFAULT_OPTION); 
+	JOptionPane.showMessageDialog((java.awt.Component) null,"Error: "+exception.getMessage(), "Error:", JOptionPane.DEFAULT_OPTION); 
+	System.exit(-1);
 	} } 
 	 @Override
 	public void paint(Graphics g) { 
@@ -44,3 +46,4 @@ public class GUI_Splash extends JWindow {
 	     GUI_Splash sp = new GUI_Splash(); 
 		 } 
 	 }
+
