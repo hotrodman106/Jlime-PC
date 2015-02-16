@@ -3,6 +3,7 @@ package jlime.pc.edition;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -10,6 +11,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
+import javax.swing.UIManager;
 
 @SuppressWarnings("javadoc")
 public class GUI_Splash extends JWindow { 
@@ -21,13 +23,22 @@ public class GUI_Splash extends JWindow {
 			 setSize(480,530); 
 			 setBackground(new Color(0, 255, 0, 0));
 			 setLocationRelativeTo(null); 
-			 this.getContentPane().add(progress);
-			 setVisible(true); 
-			 Thread.sleep(4000); 
-			 dispose();
-			 GUI.main(null);
+			 setVisible(true);
+			 Thread.sleep(2500);
+			 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		        (new Thread(){
+		        	@Override
+					public void run(){
+		            	File modules = new File("Modules");
+		                ModuleManager.init(modules);
+		                System.out.println("Preload complete");
+		   			    dispose();
+					    GUI.main(null);
+					}
+				}).start();
 } catch(Exception exception) { 
-	JOptionPane.showMessageDialog((java.awt.Component) null,"Error"+exception.getMessage(), "Error:", JOptionPane.DEFAULT_OPTION); 
+	JOptionPane.showMessageDialog((java.awt.Component) null,"Error: "+exception.getMessage(), "Error:", JOptionPane.DEFAULT_OPTION); 
+	System.exit(-1);
 	} } 
 	 @Override
 	public void paint(Graphics g) { 
@@ -43,3 +54,4 @@ public class GUI_Splash extends JWindow {
 	     GUI_Splash sp = new GUI_Splash(); 
 		 } 
 	 }
+
