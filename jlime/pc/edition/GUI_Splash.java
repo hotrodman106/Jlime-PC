@@ -34,14 +34,9 @@ public class GUI_Splash extends JWindow {
 		                System.out.println("Preload complete");
 		   			    dispose();
 					    GUI.main(null);
+					    MathHandler.init();
 					}
 				}).start();
-			 this.getContentPane().add(progress);
-			 setVisible(true); 
-			 Thread.sleep(4000);
-			 MathHandler.init();
-			 dispose();
-			 GUI.main(null);
 } catch(Exception exception) { 
 	JOptionPane.showMessageDialog((java.awt.Component) null,"Error: "+exception.getMessage(), "Error:", JOptionPane.DEFAULT_OPTION); 
 	System.exit(-1);
