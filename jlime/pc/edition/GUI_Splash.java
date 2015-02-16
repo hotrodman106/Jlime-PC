@@ -31,11 +31,11 @@ public class GUI_Splash extends JWindow {
 					public void run(){
 		            	File modules = new File("Modules");
 		                ModuleManager.init(modules);
+		                MathHandler.init();
 		                System.out.println("Preload complete");
 		   			    dispose();
-					    GUI.main(null);
-					    MathHandler.init();
-					}
+					    GUI.main(null);   
+		        	}
 				}).start();
 } catch(Exception exception) { 
 	JOptionPane.showMessageDialog((java.awt.Component) null,"Error: "+exception.getMessage(), "Error:", JOptionPane.DEFAULT_OPTION); 
